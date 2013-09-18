@@ -16,6 +16,8 @@
 		56CE7CD417E9903D00E344F9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CE7CD317E9903D00E344F9 /* Default.png */; };
 		56CE7CD617E9903D00E344F9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CE7CD517E9903D00E344F9 /* Default@2x.png */; };
 		56CE7CD817E9903D00E344F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CE7CD717E9903D00E344F9 /* Default-568h@2x.png */; };
+		56CE7CE017E9906900E344F9 /* VGCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56CE7CDF17E9906900E344F9 /* VGCarouselViewController.m */; };
+		56CE7CE317E9BF0D00E344F9 /* VGTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56CE7CE217E9BF0D00E344F9 /* VGTestViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,10 @@
 		56CE7CD317E9903D00E344F9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		56CE7CD517E9903D00E344F9 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		56CE7CD717E9903D00E344F9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		56CE7CDE17E9906900E344F9 /* VGCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGCarouselViewController.h; sourceTree = "<group>"; };
+		56CE7CDF17E9906900E344F9 /* VGCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGCarouselViewController.m; sourceTree = "<group>"; };
+		56CE7CE117E9BF0D00E344F9 /* VGTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGTestViewController.h; sourceTree = "<group>"; };
+		56CE7CE217E9BF0D00E344F9 /* VGTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGTestViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +87,10 @@
 				56CE7CD017E9903D00E344F9 /* VGAppDelegate.h */,
 				56CE7CD117E9903D00E344F9 /* VGAppDelegate.m */,
 				56CE7CC817E9903D00E344F9 /* Supporting Files */,
+				56CE7CDE17E9906900E344F9 /* VGCarouselViewController.h */,
+				56CE7CDF17E9906900E344F9 /* VGCarouselViewController.m */,
+				56CE7CE117E9BF0D00E344F9 /* VGTestViewController.h */,
+				56CE7CE217E9BF0D00E344F9 /* VGTestViewController.m */,
 			);
 			path = VGCarousel;
 			sourceTree = "<group>";
@@ -167,6 +177,8 @@
 			files = (
 				56CE7CCE17E9903D00E344F9 /* main.m in Sources */,
 				56CE7CD217E9903D00E344F9 /* VGAppDelegate.m in Sources */,
+				56CE7CE017E9906900E344F9 /* VGCarouselViewController.m in Sources */,
+				56CE7CE317E9BF0D00E344F9 /* VGTestViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +258,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VGCarousel/VGCarousel-Prefix.pch";
 				INFOPLIST_FILE = "VGCarousel/VGCarousel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -257,6 +270,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VGCarousel/VGCarousel-Prefix.pch";
 				INFOPLIST_FILE = "VGCarousel/VGCarousel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -281,6 +295,7 @@
 				56CE7CDD17E9903D00E344F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

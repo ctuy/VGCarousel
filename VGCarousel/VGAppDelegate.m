@@ -7,6 +7,8 @@
 //
 
 #import "VGAppDelegate.h"
+#import "VGCarouselViewController.h"
+#import "VGTestViewController.h"
 
 @implementation VGAppDelegate
 
@@ -14,6 +16,15 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    VGTestViewController *controllerA = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
+    controllerA.title = NSLocalizedString(@"VC1", @"");
+    controllerA.loadBackgroundColor = [UIColor grayColor];
+    VGTestViewController *controllerB = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
+    controllerB.title = NSLocalizedString(@"VC2", @"");
+    controllerB.loadBackgroundColor = [UIColor lightGrayColor];
+
+    VGCarouselViewController *carouselVC = [[VGCarouselViewController alloc] initWithViewControllers:@[controllerA, controllerB]];
+    self.window.rootViewController = carouselVC;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
