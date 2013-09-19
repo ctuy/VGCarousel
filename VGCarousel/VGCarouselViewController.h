@@ -13,7 +13,6 @@
 @protocol VGCarouselViewControllerDelegate <NSObject>
 
 
-
 @end
 
 @interface VGCarouselViewController : UIViewController

@@ -30,6 +30,44 @@
 	// Do any additional setup after loading the view.
     UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     [self.view addGestureRecognizer:doubleTapGestureRecognizer];
+    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
+    
+}
+
+- (void)didMoveToParentViewController:(UIViewController *)parent
+{
+    [super didMoveToParentViewController:parent];
+    NSLog(@"%@:%@:%@", self.title, NSStringFromSelector(_cmd), parent);
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    [super willMoveToParentViewController:parent];
+    NSLog(@"%@:%@:%@", self.title, NSStringFromSelector(_cmd), parent);
 }
 
 - (void)didReceiveMemoryWarning
