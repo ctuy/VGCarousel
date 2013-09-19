@@ -157,7 +157,6 @@
 {
     UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
     CGPoint translation = [panGestureRecognizer translationInView:self.view];
-//    NSLog(@"translation = %@", CGPointCreateDictionaryRepresentation(translation));
     switch (panGestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:
         {
