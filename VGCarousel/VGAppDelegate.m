@@ -29,8 +29,12 @@
 
 
     VGCarouselViewController *carouselVC = [[VGCarouselViewController alloc] initWithViewControllers:@[controllerA, controllerB, controllerC]];
+#if 1
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:carouselVC];
     self.window.rootViewController = navigationController;
+#else
+    self.window.rootViewController = carouselVC;
+#endif
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
