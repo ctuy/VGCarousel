@@ -9,6 +9,7 @@
 #import "VGCarouselViewController.h"
 
 #define MANUAL_APPEARANCE   1
+#define DEFAULT_CAROUSEL_TITLE_BAR_HEIGHT 26
 
 @interface VGCarouselViewController ()
 
@@ -33,6 +34,8 @@
 @property (nonatomic) BOOL leftCarouselViewControllerTriggeredDidMove;
 @property (nonatomic) BOOL rightCarouselViewControllerTriggeredDidMove;
 
+@property (nonatomic) CGFloat carouselTitleBarHeight;
+
 @end
 
 @implementation VGCarouselViewController
@@ -51,10 +54,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [self setupInitialViewController:[self carouselViewControllerAtIndex:0]];
-    
-    self.centerCarouselInitialCenter = CGPointMake(CGRectGetMidX(self.carouselContentView.bounds), CGRectGetMidY(self.carouselContentView.bounds));
-    self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
-    self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
 }
 
 - (void)setupInitialViewController:(UIViewController *)vc
@@ -81,6 +80,7 @@
     self = [self initWithNibName:nil bundle:nil];
     if (self) {
         self.carouselViewControllers = viewControllers;
+        self.carouselTitleBarHeight = DEFAULT_CAROUSEL_TITLE_BAR_HEIGHT;
     }
     return self;
 }
@@ -119,15 +119,15 @@
     CGRect viewFrame = [[UIScreen mainScreen] applicationFrame];
     self.view = [[UIView alloc] initWithFrame:viewFrame];
     self.view.backgroundColor = [UIColor redColor];
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
-    self.carouselTitleView = [[UIView alloc] initWithFrame:CGRectMake(0, 20.0f, viewFrame.size.width, 40.0f)];
+    self.carouselTitleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewFrame.size.width, self.carouselTitleBarHeight)];
     self.carouselTitleView.backgroundColor = [UIColor blueColor];
     [self.view addSubview:self.carouselTitleView];
     
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     [self.view addGestureRecognizer:panGestureRecognizer];
-    self.carouselContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 60.0f, viewFrame.size.width, viewFrame.size.height - 40.0f)];
+    self.carouselContentView = [[UIView alloc] initWithFrame:CGRectMake(0, self.carouselTitleBarHeight, viewFrame.size.width, viewFrame.size.height - self.carouselTitleBarHeight)];
     self.carouselContentView.backgroundColor = [UIColor yellowColor];
     self.carouselContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.carouselContentView];
@@ -167,6 +167,9 @@
         case UIGestureRecognizerStateBegan:
         {
             self.centerCarouselViewController.view.userInteractionEnabled = NO;
+            self.centerCarouselInitialCenter = CGPointMake(CGRectGetMidX(self.carouselContentView.bounds), CGRectGetMidY(self.carouselContentView.bounds));
+            self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
+            self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
         }
             break;
         case UIGestureRecognizerStateChanged:
