@@ -18,6 +18,10 @@
 @interface VGCarouselViewController : UIViewController
 
 @property (nonatomic, assign) id <VGCarouselViewControllerDelegate> delegate;
+@property (nonatomic, strong, readonly) UIView *carouselTitleView;
+@property (nonatomic, strong) UIFont *carouselTitleFont;
+@property (nonatomic, strong) UIColor *currentCarouselTitleTextColor;
+@property (nonatomic, strong) UIColor *inactiveCarouselTitleTextColor;
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
 
