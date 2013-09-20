@@ -20,6 +20,7 @@
 
 @property (nonatomic, assign) id <VGCarouselViewControllerDelegate> delegate;
 @property (nonatomic, strong, readonly) VGCarouselTitleView *carouselTitleView;
+@property (nonatomic) CGFloat percentageOfDistanceOfTranslationToScreenToConsiderChange;
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
 

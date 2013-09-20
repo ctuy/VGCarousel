@@ -18,5 +18,8 @@
 @property (nonatomic) NSUInteger currentTitleIndex;
 
 - (id)initWithTitles:(NSArray *)titles;
+- (void)shiftRight;
+- (void)shiftLeft;
+- (void)reset;
 
 @end

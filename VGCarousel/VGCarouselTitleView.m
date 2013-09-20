@@ -22,6 +22,9 @@
 @property (nonatomic, strong) UILabel *rightLabel;
 @property (nonatomic, strong) UILabel *floatingLabel;
 
+@property (nonatomic) CGFloat leftLabelInitialCenterX;
+@property (nonatomic) CGFloat rightLabelInitialCenterX;
+
 @property (nonatomic, strong) NSArray *titleLabels;
 
 @end
@@ -70,8 +73,6 @@
         self.backgroundColor = DEFAULT_CAROUSEL_TITLE_BAR_COLOR;
         
         self.currentTitleIndex = 0;
-        
-        [self setupCarouselTitles:[self visibleTitlesAtIndex:self.currentTitleIndex]];
     }
     return self;
 }
@@ -85,14 +86,56 @@
 {
     [super layoutSubviews];
     
-    [self.titleLabels enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        UILabel *label = (UILabel *)obj;
-        [label sizeToFit];
-    }];
+    [self layoutBasedOnPercentage];
+}
+
+- (void)layoutBasedOnPercentage
+{
+    if (self.shiftPercentage > 0) {
+        NSArray *titles = [[self visibleTitlesAtIndex:self.currentTitleIndex] arrayByAddingObject:[self titleForFarLeft:self.currentTitleIndex]];
+        [self setupCarouselTitles:titles];
+    }
+    else if (self.shiftPercentage < 0) {
+        NSArray *titles = [[self visibleTitlesAtIndex:self.currentTitleIndex] arrayByAddingObject:[self titleForFarRight:self.currentTitleIndex]];
+        [self setupCarouselTitles:titles];
+    }
+    else {
+        [self setupCarouselTitles:[self visibleTitlesAtIndex:self.currentTitleIndex]];
+    }
     
-    self.leftLabel.center = CGPointMake(10.0f + self.leftLabel.bounds.size.width / 2, CGRectGetMidY(self.bounds));
-    self.centerLabel.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    self.rightLabel.center = CGPointMake(self.bounds.size.width - 10.0f - self.rightLabel.bounds.size.width / 2, CGRectGetMidY(self.bounds));
+    CGPoint initialLeftCenter = CGPointMake(10.0f + self.leftLabel.bounds.size.width / 2, CGRectGetMidY(self.bounds));
+    CGPoint initialCenterCenter = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    CGPoint initialRightCenter = CGPointMake(self.bounds.size.width - 10.0f - self.rightLabel.bounds.size.width / 2, CGRectGetMidY(self.bounds));
+    
+    if (self.shiftPercentage > 0) {
+        self.leftLabel.center = CGPointMake(initialLeftCenter.x + ((initialCenterCenter.x - initialLeftCenter.x) * self.shiftPercentage), initialLeftCenter.y);
+        
+        CGPoint finalCenterCenter = CGPointMake(self.bounds.size.width - 10.0f - (self.centerLabel.bounds.size.width / 2), initialCenterCenter.y);
+        self.centerLabel.center = CGPointMake(initialCenterCenter.x + ((finalCenterCenter.x - initialCenterCenter.x) * self.shiftPercentage), initialCenterCenter.y);
+        
+        self.rightLabel.center = CGPointMake(initialRightCenter.x + ((initialCenterCenter.x + self.bounds.size.width - initialRightCenter.x) * self.shiftPercentage), initialRightCenter.y);
+        
+        CGPoint initialFloatingCenter = CGPointMake(initialCenterCenter.x - self.bounds.size.width, initialCenterCenter.y);
+        
+        self.floatingLabel.center = CGPointMake(initialFloatingCenter.x + ((10.0f + self.floatingLabel.bounds.size.width / 2) - initialFloatingCenter.x) * self.shiftPercentage, initialFloatingCenter.y);
+    }
+    else if (self.shiftPercentage < 0) {
+        self.leftLabel.center = CGPointMake(initialLeftCenter.x + ((initialLeftCenter.x - (initialCenterCenter.x - self.bounds.size.width)) * self.shiftPercentage), initialLeftCenter.y);
+        
+        CGPoint finalCenterCenter = CGPointMake(10.0f + self.centerLabel.bounds.size.width / 2, initialCenterCenter.y);
+        self.centerLabel.center = CGPointMake(initialCenterCenter.x + ((initialCenterCenter.x - finalCenterCenter.x) * self.shiftPercentage), initialCenterCenter.y);
+        
+        self.rightLabel.center = CGPointMake(initialRightCenter.x + ((initialRightCenter.x - initialCenterCenter.x) * self.shiftPercentage), initialRightCenter.y);
+        
+        CGPoint initialFloatingCenter = CGPointMake(initialCenterCenter.x + self.bounds.size.width, initialCenterCenter.y);
+        
+        self.floatingLabel.center = CGPointMake(initialFloatingCenter.x + ((initialFloatingCenter.x - (self.bounds.size.width - 10.0f - (self.floatingLabel.bounds.size.width / 2))) * self.shiftPercentage), initialFloatingCenter.y);
+    }
+    else {
+        self.leftLabel.center = initialLeftCenter;
+        self.centerLabel.center = initialCenterCenter;
+        self.rightLabel.center = initialRightCenter;
+    }
 }
 
 #pragma mark - Methods
@@ -127,13 +170,75 @@
 {
     if (carouselTitles.count > 1) {
         self.leftLabel.text = carouselTitles[0];
+        [self.leftLabel sizeToFit];
+        
         self.centerLabel.text = carouselTitles[1];
+        [self.centerLabel sizeToFit];
+        
         self.rightLabel.text = carouselTitles[2];
+        [self.rightLabel sizeToFit];
+        
+        if (carouselTitles.count == 4) {
+            self.floatingLabel.text = carouselTitles[3];
+            [self.floatingLabel sizeToFit];
+        }
     }
     else {
         self.centerLabel.text = [carouselTitles objectAtIndex:0];
+        [self.centerLabel sizeToFit];
+        
+        self.leftLabel.frame = CGRectZero;
+        self.rightLabel.frame = CGRectZero;
+        self.floatingLabel.frame = CGRectZero;
     }
 }
+
+- (void)shiftRight
+{
+    self.shiftPercentage = 0.0f;
+    
+    NSUInteger nextIndex = [VGIndexUtilities nextIndexOfIndex:self.currentTitleIndex numberOfItems:self.carouselTitles.count];
+    
+    self.currentTitleIndex = nextIndex;
+    
+    UILabel *temporaryLabel = self.rightLabel;
+    self.rightLabel = self.centerLabel;
+    self.centerLabel = self.leftLabel;
+    self.leftLabel = self.floatingLabel;
+    self.floatingLabel = temporaryLabel;
+    
+    [UIView animateWithDuration:0.3f animations:^{
+        [self layoutBasedOnPercentage];
+    }];
+}
+
+- (void)shiftLeft
+{
+    self.shiftPercentage = 0.0f;
+    
+    NSUInteger nextIndex = [VGIndexUtilities previousIndexOfIndex:self.currentTitleIndex numberOfItems:self.carouselTitles.count];
+    
+    self.currentTitleIndex = nextIndex;
+    
+    UILabel *temporaryLabel = self.leftLabel;
+    self.leftLabel = self.centerLabel;
+    self.centerLabel = self.rightLabel;
+    self.rightLabel = self.floatingLabel;
+    self.floatingLabel = temporaryLabel;
+    
+    [UIView animateWithDuration:0.3f animations:^{
+        [self layoutBasedOnPercentage];
+    }];
+}
+
+- (void)reset
+{
+    self.shiftPercentage = 0.0f;
+    [UIView animateWithDuration:0.3f animations:^{
+        [self layoutBasedOnPercentage];
+    }];
+}
+
 
 
 /*

@@ -60,6 +60,8 @@
         }];
         
         self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
+        
+        self.percentageOfDistanceOfTranslationToScreenToConsiderChange = 0.4;
     }
     return self;
 }
@@ -155,6 +157,8 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
+            self.carouselTitleView.shiftPercentage = (translation.x / (self.view.bounds.size.width * self.percentageOfDistanceOfTranslationToScreenToConsiderChange));
+            [self.carouselTitleView setNeedsLayout];
             if (translation.x > 0) {
                 if (!self.leftCarouselViewController) {
                     self.leftCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
@@ -207,8 +211,9 @@
             break;
         case UIGestureRecognizerStateEnded:
         {
-            if (fabs(translation.x) > self.carouselContentView.bounds.size.width * 0.4) {
+            if (fabs(translation.x) > self.carouselContentView.bounds.size.width * self.percentageOfDistanceOfTranslationToScreenToConsiderChange) {
                 if (translation.x > 0) {
+                    [self.carouselTitleView shiftRight];
                     [self.centerCarouselViewController willMoveToParentViewController:nil];
 #if MANUAL_APPEARANCE
                     [self.centerCarouselViewController beginAppearanceTransition:NO animated:YES];
@@ -230,6 +235,7 @@
                     }];
                 }
                 else if (translation.x < 0) {
+                    [self.carouselTitleView shiftLeft];
                     [self.centerCarouselViewController willMoveToParentViewController:nil];
 #if MANUAL_APPEARANCE
                     [self.centerCarouselViewController beginAppearanceTransition:NO animated:YES];
@@ -252,6 +258,7 @@
                 }
             }
             else {
+                [self.carouselTitleView reset];
                 if (self.leftCarouselViewController) {
                     [self.leftCarouselViewController willMoveToParentViewController:nil];
 #if MANUAL_APPEARANCE
