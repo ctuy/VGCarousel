@@ -67,38 +67,6 @@
     self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
 }
 
-#if 0
-- (void)setupCarouselTitles:(NSArray *)carouselTitles
-{
-    if (carouselTitles.count > 1) {
-        UILabel *leftLabel = [self.carouselTitleLabels objectAtIndex:0];
-        leftLabel.text = carouselTitles[0];
-        [leftLabel sizeToFit];
-        leftLabel.textColor = self.inactiveCarouselTitleTextColor;
-        leftLabel.center = CGPointMake(10.0f + leftLabel.bounds.size.width / 2, CGRectGetMidY(self.carouselTitleView.bounds));
-        
-        UILabel *centerLabel = [self.carouselTitleLabels objectAtIndex:1];
-        centerLabel.text = carouselTitles[1];
-        [centerLabel sizeToFit];
-        centerLabel.textColor = self.currentCarouselTitleTextColor;
-        centerLabel.center = CGPointMake(CGRectGetMidX(self.carouselTitleView.bounds), CGRectGetMidY(self.carouselTitleView.bounds));
-
-        UILabel *rightLabel = [self.carouselTitleLabels objectAtIndex:2];
-        rightLabel.text = carouselTitles[2];
-        [rightLabel sizeToFit];
-        rightLabel.textColor = self.inactiveCarouselTitleTextColor;
-        rightLabel.center = CGPointMake(self.carouselTitleView.bounds.size.width - 10.0f - rightLabel.bounds.size.width / 2, CGRectGetMidY(self.carouselTitleView.bounds));
-    }
-    else {
-        UILabel *centerLabel = [self.carouselTitleLabels objectAtIndex:1];
-        centerLabel.text = [carouselTitles objectAtIndex:0];
-        [centerLabel sizeToFit];
-        centerLabel.textColor = self.currentCarouselTitleTextColor;
-        centerLabel.center = CGPointMake(CGRectGetMidX(self.carouselTitleView.bounds), CGRectGetMidY(self.carouselTitleView.bounds));
-    }
-}
-#endif
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -168,18 +136,6 @@
     UIViewController *vc = [self carouselViewControllerAtIndex:rightIndex];
     vc.view.center = self.rightCarouselInitialCenter;
     return vc;
-}
-
-- (NSString *)titleForFarLeft:(NSUInteger)index
-{
-    NSUInteger farLeftIndex = [VGIndexUtilities previousIndexOfIndex:[VGIndexUtilities previousIndexOfIndex:index numberOfItems:self.carouselTitles.count] numberOfItems:self.carouselTitles.count];
-    return [self.carouselTitles objectAtIndex:farLeftIndex];
-}
-
-- (NSString *)titleForFarRight:(NSUInteger)index
-{
-    NSUInteger farRightIndex = [VGIndexUtilities nextIndexOfIndex:[VGIndexUtilities nextIndexOfIndex:index numberOfItems:self.carouselTitles.count] numberOfItems:self.carouselTitles.count];
-    return [self.carouselTitles objectAtIndex:farRightIndex];
 }
 
 - (void)handlePanGesture:(UIGestureRecognizer *)gestureRecognizer
