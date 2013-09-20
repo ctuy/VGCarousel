@@ -37,26 +37,6 @@
     return self;
 }
 
-//- (void)layoutSubviews
-//{
-//    [super layoutSubviews];
-//}
-
-- (NSArray *)visibleTitlesAtIndex:(NSUInteger)index
-{
-    NSAssert(index < self.carouselTitles.count, @"Index out of range");
-    if (self.carouselTitles.count == 1) {
-        return [NSArray arrayWithObject:self.carouselTitles[index]];
-    }
-    else {
-        NSString *center = self.carouselTitles[index];
-        NSString *left = self.carouselTitles[[VGIndexUtilities previousIndexOfIndex:index numberOfItems:self.carouselTitles.count]];
-        NSString *right = self.carouselTitles[[VGIndexUtilities nextIndexOfIndex:index numberOfItems:self.carouselTitles.count]];
-        return [NSArray arrayWithObjects:left, center, right, nil];
-    }
-}
-
-
 - (id)initWithTitles:(NSArray *)titles
 {
     self = [self initWithFrame:CGRectZero];
@@ -72,6 +52,7 @@
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
             label.textColor = self.inactiveTitleColor;
             label.font = self.carouselTitleFont;
+            label.backgroundColor = [UIColor clearColor];
             [self addSubview:label];
             [titleLabels addObject:label];
         }
@@ -80,12 +61,17 @@
         
         self.leftLabel = self.titleLabels[0];
         self.centerLabel = self.titleLabels[1];
+        self.centerLabel.textColor = self.activeTitleColor;
         self.rightLabel = self.titleLabels[2];
         self.floatingLabel = self.titleLabels[3];
         
         self.shiftPercentage = 0.0f;
         
         self.backgroundColor = DEFAULT_CAROUSEL_TITLE_BAR_COLOR;
+        
+        self.currentTitleIndex = 0;
+        
+        [self setupCarouselTitles:[self visibleTitlesAtIndex:self.currentTitleIndex]];
     }
     return self;
 }
@@ -93,6 +79,36 @@
 - (CGSize)sizeThatFits:(CGSize)size
 {
     return CGSizeMake([self superview].bounds.size.width, DEFAULT_CAROUSEL_TITLE_BAR_HEIGHT);
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self.titleLabels enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        UILabel *label = (UILabel *)obj;
+        [label sizeToFit];
+    }];
+    
+    self.leftLabel.center = CGPointMake(10.0f + self.leftLabel.bounds.size.width / 2, CGRectGetMidY(self.bounds));
+    self.centerLabel.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    self.rightLabel.center = CGPointMake(self.bounds.size.width - 10.0f - self.rightLabel.bounds.size.width / 2, CGRectGetMidY(self.bounds));
+}
+
+#pragma mark - Methods
+
+- (NSArray *)visibleTitlesAtIndex:(NSUInteger)index
+{
+    NSAssert(index < self.carouselTitles.count, @"Index out of range");
+    if (self.carouselTitles.count == 1) {
+        return [NSArray arrayWithObject:self.carouselTitles[index]];
+    }
+    else {
+        NSString *center = self.carouselTitles[index];
+        NSString *left = self.carouselTitles[[VGIndexUtilities previousIndexOfIndex:index numberOfItems:self.carouselTitles.count]];
+        NSString *right = self.carouselTitles[[VGIndexUtilities nextIndexOfIndex:index numberOfItems:self.carouselTitles.count]];
+        return [NSArray arrayWithObjects:left, center, right, nil];
+    }
 }
 
 - (NSString *)titleForFarLeft:(NSUInteger)index
@@ -107,37 +123,17 @@
     return [self.carouselTitles objectAtIndex:farRightIndex];
 }
 
-#if 0
 - (void)setupCarouselTitles:(NSArray *)carouselTitles
 {
     if (carouselTitles.count > 1) {
-        UILabel *leftLabel = [self.carouselTitleLabels objectAtIndex:0];
-        leftLabel.text = carouselTitles[0];
-        [leftLabel sizeToFit];
-        leftLabel.textColor = self.inactiveCarouselTitleTextColor;
-        leftLabel.center = CGPointMake(10.0f + leftLabel.bounds.size.width / 2, CGRectGetMidY(self.carouselTitleView.bounds));
-        
-        UILabel *centerLabel = [self.carouselTitleLabels objectAtIndex:1];
-        centerLabel.text = carouselTitles[1];
-        [centerLabel sizeToFit];
-        centerLabel.textColor = self.currentCarouselTitleTextColor;
-        centerLabel.center = CGPointMake(CGRectGetMidX(self.carouselTitleView.bounds), CGRectGetMidY(self.carouselTitleView.bounds));
-        
-        UILabel *rightLabel = [self.carouselTitleLabels objectAtIndex:2];
-        rightLabel.text = carouselTitles[2];
-        [rightLabel sizeToFit];
-        rightLabel.textColor = self.inactiveCarouselTitleTextColor;
-        rightLabel.center = CGPointMake(self.carouselTitleView.bounds.size.width - 10.0f - rightLabel.bounds.size.width / 2, CGRectGetMidY(self.carouselTitleView.bounds));
+        self.leftLabel.text = carouselTitles[0];
+        self.centerLabel.text = carouselTitles[1];
+        self.rightLabel.text = carouselTitles[2];
     }
     else {
-        UILabel *centerLabel = [self.carouselTitleLabels objectAtIndex:1];
-        centerLabel.text = [carouselTitles objectAtIndex:0];
-        [centerLabel sizeToFit];
-        centerLabel.textColor = self.currentCarouselTitleTextColor;
-        centerLabel.center = CGPointMake(CGRectGetMidX(self.carouselTitleView.bounds), CGRectGetMidY(self.carouselTitleView.bounds));
+        self.centerLabel.text = [carouselTitles objectAtIndex:0];
     }
 }
-#endif
 
 
 /*

@@ -15,6 +15,7 @@
 @property (nonatomic, strong) UIColor *activeTitleColor;
 @property (nonatomic, strong) UIColor *inactiveTitleColor;
 @property (nonatomic) float shiftPercentage;
+@property (nonatomic) NSUInteger currentTitleIndex;
 
 - (id)initWithTitles:(NSArray *)titles;
 
