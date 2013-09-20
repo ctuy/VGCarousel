@@ -55,7 +55,6 @@
 {
     [super viewDidDisappear:animated];
     NSLog(@"%@:%@", self.title, NSStringFromSelector(_cmd));
-    
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
