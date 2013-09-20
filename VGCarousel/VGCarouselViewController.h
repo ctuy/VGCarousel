@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class VGCarouselViewController;
+@class VGCarouselTitleView;
 
 @protocol VGCarouselViewControllerDelegate <NSObject>
 
@@ -18,10 +19,7 @@
 @interface VGCarouselViewController : UIViewController
 
 @property (nonatomic, assign) id <VGCarouselViewControllerDelegate> delegate;
-@property (nonatomic, strong, readonly) UIView *carouselTitleView;
-@property (nonatomic, strong) UIFont *carouselTitleFont;
-@property (nonatomic, strong) UIColor *currentCarouselTitleTextColor;
-@property (nonatomic, strong) UIColor *inactiveCarouselTitleTextColor;
+@property (nonatomic, strong, readonly) VGCarouselTitleView *carouselTitleView;
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
 

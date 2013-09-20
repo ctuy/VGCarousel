@@ -7,21 +7,17 @@
 //
 
 #import "VGCarouselViewController.h"
+#import "VGCarouselTitleView.h"
+#import "VGIndexUtilities.h"
 
 #define MANUAL_APPEARANCE   1
-#define DEFAULT_CAROUSEL_TITLE_BAR_HEIGHT 26
-#define DEFAULT_CAROUSEL_TITLE_BAR_COLOR [UIColor colorWithRed:0.0/255.0 green:96.0/255.0 blue:119.0/255.0 alpha:1.0]
-#define DEFAULT_CAROUSEL_TITLE_FONT [UIFont fontWithName:@"Helvetica-Bold" size:16.0f]
-#define DEFAULT_CAROUSEL_CURRENT_TITLE_COLOR [UIColor whiteColor]
-#define DEFAULT_CAROUSEL_INACTIVE_TITLE_COLOR [UIColor lightGrayColor]
 
 @interface VGCarouselViewController ()
 
 @property (nonatomic, strong) NSArray *carouselViewControllers;
 
+@property (nonatomic, strong) VGCarouselTitleView *carouselTitleView;
 @property (nonatomic, strong) NSArray *carouselTitles;
-@property (nonatomic, strong) UIView *carouselTitleView;
-@property (nonatomic, strong) NSArray *carouselTitleLabels;
 
 @property (nonatomic, strong) UIView *carouselContentView;
 
@@ -37,8 +33,6 @@
 
 @property (nonatomic) BOOL leftCarouselViewControllerTriggeredDidMove;
 @property (nonatomic) BOOL rightCarouselViewControllerTriggeredDidMove;
-
-@property (nonatomic) CGFloat carouselTitleBarHeight;
 
 @end
 
@@ -58,7 +52,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [self setupInitialViewController:[self carouselViewControllerAtIndex:0]];
-    [self setupCarouselTitles:[self visibleTitlesAtIndex:0]];
 }
 
 - (void)setupInitialViewController:(UIViewController *)vc
@@ -74,6 +67,7 @@
     self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
 }
 
+#if 0
 - (void)setupCarouselTitles:(NSArray *)carouselTitles
 {
     if (carouselTitles.count > 1) {
@@ -103,6 +97,7 @@
         centerLabel.center = CGPointMake(CGRectGetMidX(self.carouselTitleView.bounds), CGRectGetMidY(self.carouselTitleView.bounds));
     }
 }
+#endif
 
 - (void)didReceiveMemoryWarning
 {
@@ -121,43 +116,10 @@
             UIViewController *vc = (UIViewController *)obj;
             [carouselTitles addObject:(vc.title.length > 0 ? vc.title : @"")];
         }];
-        self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
         
-        self.carouselTitleBarHeight = DEFAULT_CAROUSEL_TITLE_BAR_HEIGHT;
-        self.carouselTitleFont = DEFAULT_CAROUSEL_TITLE_FONT;
-        self.currentCarouselTitleTextColor = DEFAULT_CAROUSEL_CURRENT_TITLE_COLOR;
-        self.inactiveCarouselTitleTextColor = DEFAULT_CAROUSEL_INACTIVE_TITLE_COLOR;
+        self.carouselTitles = [NSArray arrayWithArray:carouselTitles];        
     }
     return self;
-}
-
-- (NSUInteger)nextIndexOfIndex:(NSUInteger)index numberOfItems:(NSUInteger)numberOfItems
-{
-    return (index + 1) % numberOfItems;
-}
-
-- (NSUInteger)previousIndexOfIndex:(NSUInteger)index numberOfItems:(NSUInteger)numberOfItems
-{
-    if (index == 0) {
-        return (numberOfItems - 1);
-    }
-    else {
-        return index - 1;
-    }
-}
-
-- (NSArray *)visibleTitlesAtIndex:(NSUInteger)index
-{
-    NSAssert(index < self.carouselTitles.count, @"Index out of range");
-    if (self.carouselTitles.count == 1) {
-        return [NSArray arrayWithObject:self.carouselTitles[index]];
-    }
-    else {
-        NSString *center = self.carouselTitles[index];
-        NSString *left = self.carouselTitles[[self previousIndexOfIndex:index numberOfItems:self.carouselTitles.count]];
-        NSString *right = self.carouselTitles[[self nextIndexOfIndex:index numberOfItems:self.carouselTitles.count]];
-        return [NSArray arrayWithObjects:left, center, right, nil];
-    }
 }
 
 - (void)loadView
@@ -167,26 +129,16 @@
     self.view.backgroundColor = [UIColor redColor];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
-    self.carouselTitleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewFrame.size.width, self.carouselTitleBarHeight)];
-    self.carouselTitleView.backgroundColor = DEFAULT_CAROUSEL_TITLE_BAR_COLOR;
+    self.carouselTitleView = [[VGCarouselTitleView alloc] initWithTitles:self.carouselTitles];
     [self.view addSubview:self.carouselTitleView];
-    
-    NSMutableArray *carouselTitleLabels = [NSMutableArray arrayWithCapacity:4];
-    for (NSUInteger index = 0; index < 4; ++index) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-        label.font = self.carouselTitleFont;
-        label.textColor = self.inactiveCarouselTitleTextColor;
-        label.backgroundColor = [UIColor clearColor];
-        [self.carouselTitleView addSubview:label];
-        [carouselTitleLabels addObject:label];
-    }
-    self.carouselTitleLabels = [NSArray arrayWithArray:carouselTitleLabels];
+    [self.carouselTitleView sizeToFit];
     
     if (self.carouselViewControllers.count > 1) {
         UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
         [self.view addGestureRecognizer:panGestureRecognizer];        
     }
-    self.carouselContentView = [[UIView alloc] initWithFrame:CGRectMake(0, self.carouselTitleBarHeight, viewFrame.size.width, viewFrame.size.height - self.carouselTitleBarHeight)];
+    
+    self.carouselContentView = [[UIView alloc] initWithFrame:CGRectMake(0, self.carouselTitleView.bounds.size.height, viewFrame.size.width, viewFrame.size.height - self.carouselTitleView.bounds.size.height)];
     self.carouselContentView.backgroundColor = [UIColor yellowColor];
     self.carouselContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.carouselContentView];
@@ -204,7 +156,7 @@
 
 - (UIViewController *)leftCarouselViewControllerOfViewControllerAtIndex:(NSUInteger)index
 {
-    NSUInteger leftIndex = [self previousIndexOfIndex:index numberOfItems:self.carouselViewControllers.count];
+    NSUInteger leftIndex = [VGIndexUtilities previousIndexOfIndex:index numberOfItems:self.carouselViewControllers.count];
     UIViewController *vc = [self carouselViewControllerAtIndex:leftIndex];
     vc.view.center = self.leftCarouselInitialCenter;;
     return vc;
@@ -212,10 +164,22 @@
 
 - (UIViewController *)rightCarouselViewControllerOfViewControllerAtIndex:(NSUInteger)index
 {
-    NSUInteger rightIndex = [self nextIndexOfIndex:index numberOfItems:self.carouselViewControllers.count];
+    NSUInteger rightIndex = [VGIndexUtilities nextIndexOfIndex:index numberOfItems:self.carouselViewControllers.count];
     UIViewController *vc = [self carouselViewControllerAtIndex:rightIndex];
     vc.view.center = self.rightCarouselInitialCenter;
     return vc;
+}
+
+- (NSString *)titleForFarLeft:(NSUInteger)index
+{
+    NSUInteger farLeftIndex = [VGIndexUtilities previousIndexOfIndex:[VGIndexUtilities previousIndexOfIndex:index numberOfItems:self.carouselTitles.count] numberOfItems:self.carouselTitles.count];
+    return [self.carouselTitles objectAtIndex:farLeftIndex];
+}
+
+- (NSString *)titleForFarRight:(NSUInteger)index
+{
+    NSUInteger farRightIndex = [VGIndexUtilities nextIndexOfIndex:[VGIndexUtilities nextIndexOfIndex:index numberOfItems:self.carouselTitles.count] numberOfItems:self.carouselTitles.count];
+    return [self.carouselTitles objectAtIndex:farRightIndex];
 }
 
 - (void)handlePanGesture:(UIGestureRecognizer *)gestureRecognizer
