@@ -157,7 +157,9 @@
             break;
         case UIGestureRecognizerStateChanged:
         {
-            self.carouselTitleView.shiftPercentage = (translation.x / (self.view.bounds.size.width * self.percentageOfDistanceOfTranslationToScreenToConsiderChange));
+            float change = (translation.x / (self.view.bounds.size.width));
+            change = (change > 1) ? 1 : ((change < -1) ? -1 : change);
+            self.carouselTitleView.shiftPercentage = change;
             [self.carouselTitleView setNeedsLayout];
             if (translation.x > 0) {
                 if (!self.leftCarouselViewController) {
