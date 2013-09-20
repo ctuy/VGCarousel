@@ -27,8 +27,12 @@
     controllerC.title = NSLocalizedString(@"VC3", @"");
     controllerC.loadBackgroundColor = [UIColor orangeColor];
 
+    VGTestViewController *controllerD = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
+    controllerD.title = NSLocalizedString(@"VC4", @"");
+    controllerD.loadBackgroundColor = [UIColor purpleColor];
 
-    VGCarouselViewController *carouselVC = [[VGCarouselViewController alloc] initWithViewControllers:@[controllerA, controllerB, controllerC]];
+
+    VGCarouselViewController *carouselVC = [[VGCarouselViewController alloc] initWithViewControllers:@[controllerA, controllerB, controllerC, controllerD]];
 #if 1
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:carouselVC];
     self.window.rootViewController = navigationController;
