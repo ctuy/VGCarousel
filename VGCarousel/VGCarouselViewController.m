@@ -11,6 +11,7 @@
 #import "VGIndexUtilities.h"
 
 #define MANUAL_APPEARANCE   1
+#define DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD 0.4f
 
 @interface VGCarouselViewController ()
 
@@ -61,7 +62,7 @@
         
         self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
         
-        self.percentageOfDistanceOfTranslationToScreenToConsiderChange = 0.4;
+        self.percentageTranslationThreshold = DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD;
     }
     return self;
 }
@@ -74,7 +75,7 @@
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
     self.carouselTitleView = [[VGCarouselTitleView alloc] initWithTitles:self.carouselTitles];
-    self.carouselTitleView.thresholdPercentage = self.percentageOfDistanceOfTranslationToScreenToConsiderChange;
+    self.carouselTitleView.thresholdPercentage = self.percentageTranslationThreshold;
     [self.view addSubview:self.carouselTitleView];
     [self.carouselTitleView sizeToFit];
     
@@ -215,7 +216,7 @@
             break;
         case UIGestureRecognizerStateEnded:
         {
-            if (fabs(translation.x) > self.carouselContentView.bounds.size.width * self.percentageOfDistanceOfTranslationToScreenToConsiderChange) {
+            if (fabs(translation.x) > self.carouselContentView.bounds.size.width * self.percentageTranslationThreshold) {
                 if (translation.x > 0) {
                     self.carouselTitleView.shiftPercentage = 1.0f;
                     [self.centerCarouselViewController willMoveToParentViewController:nil];

@@ -13,6 +13,7 @@
 
 @protocol VGCarouselViewControllerDelegate <NSObject>
 
+- (void)carouselViewController:(VGCarouselViewController *)carouselViewController didChangeToIndex:(NSUInteger)index;
 
 @end
 
@@ -20,7 +21,8 @@
 
 @property (nonatomic, assign) id <VGCarouselViewControllerDelegate> delegate;
 @property (nonatomic, strong, readonly) VGCarouselTitleView *carouselTitleView;
-@property (nonatomic) CGFloat percentageOfDistanceOfTranslationToScreenToConsiderChange;
+@property (nonatomic) CGFloat percentageTranslationThreshold;
+@property (nonatomic, readonly) NSUInteger indexOfCurrentCenterCarouselViewController;
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
 
