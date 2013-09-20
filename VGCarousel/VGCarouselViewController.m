@@ -10,6 +10,8 @@
 #import "VGCarouselTitleView.h"
 #import "VGIndexUtilities.h"
 
+// TODO: checkout bug when panning from left edge closest to screen to right direction then back to left again
+
 #define MANUAL_APPEARANCE   1
 #define DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD 0.4f
 
