@@ -47,32 +47,6 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    [self setupInitialViewController:[self carouselViewControllerAtIndex:0]];
-}
-
-- (void)setupInitialViewController:(UIViewController *)vc
-{
-    [self addChildViewController:vc];
-    [self.carouselContentView addSubview:vc.view];
-    [vc didMoveToParentViewController:self];
-#if MANUAL_APPEARANCE    
-    [vc beginAppearanceTransition:YES animated:NO];
-    [vc endAppearanceTransition];
-#endif
-    self.centerCarouselViewController = vc;
-    self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (id)initWithViewControllers:(NSArray *)viewControllers
 {
     self = [self initWithNibName:nil bundle:nil];
@@ -85,7 +59,7 @@
             [carouselTitles addObject:(vc.title.length > 0 ? vc.title : @"")];
         }];
         
-        self.carouselTitles = [NSArray arrayWithArray:carouselTitles];        
+        self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
     }
     return self;
 }
@@ -103,13 +77,41 @@
     
     if (self.carouselViewControllers.count > 1) {
         UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-        [self.view addGestureRecognizer:panGestureRecognizer];        
+        [self.view addGestureRecognizer:panGestureRecognizer];
     }
     
     self.carouselContentView = [[UIView alloc] initWithFrame:CGRectMake(0, self.carouselTitleView.bounds.size.height, viewFrame.size.width, viewFrame.size.height - self.carouselTitleView.bounds.size.height)];
     self.carouselContentView.backgroundColor = [UIColor yellowColor];
     self.carouselContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.carouselContentView];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+    [self setupInitialViewController:[self carouselViewControllerAtIndex:0]];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Methods
+
+- (void)setupInitialViewController:(UIViewController *)vc
+{
+    [self addChildViewController:vc];
+    [self.carouselContentView addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
+#if MANUAL_APPEARANCE
+    [vc beginAppearanceTransition:YES animated:NO];
+    [vc endAppearanceTransition];
+#endif
+    self.centerCarouselViewController = vc;
+    self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
 }
 
 - (UIViewController *)carouselViewControllerAtIndex:(NSUInteger)index
