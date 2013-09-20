@@ -118,6 +118,15 @@
         CGPoint initialFloatingCenter = CGPointMake(initialCenterCenter.x - self.bounds.size.width, initialCenterCenter.y);
         
         self.floatingLabel.center = CGPointMake(initialFloatingCenter.x + ((10.0f + self.floatingLabel.bounds.size.width / 2) - initialFloatingCenter.x) * self.shiftPercentage, initialFloatingCenter.y);
+        
+        if (fabs(self.shiftPercentage) > self.thresholdPercentage) {
+            self.leftLabel.textColor = self.activeTitleColor;
+            self.centerLabel.textColor = self.inactiveTitleColor;
+        }
+        else {
+            self.leftLabel.textColor = self.inactiveTitleColor;
+            self.centerLabel.textColor = self.activeTitleColor;
+        }
     }
     else if (self.shiftPercentage < 0) {
         self.leftLabel.center = CGPointMake(initialLeftCenter.x + ((initialLeftCenter.x - (initialCenterCenter.x - self.bounds.size.width)) * self.shiftPercentage), initialLeftCenter.y);
@@ -130,6 +139,15 @@
         CGPoint initialFloatingCenter = CGPointMake(initialCenterCenter.x + self.bounds.size.width, initialCenterCenter.y);
         
         self.floatingLabel.center = CGPointMake(initialFloatingCenter.x + ((initialFloatingCenter.x - (self.bounds.size.width - 10.0f - (self.floatingLabel.bounds.size.width / 2))) * self.shiftPercentage), initialFloatingCenter.y);
+        
+        if (fabs(self.shiftPercentage) > self.thresholdPercentage) {
+            self.rightLabel.textColor = self.activeTitleColor;
+            self.centerLabel.textColor = self.inactiveTitleColor;
+        }
+        else {
+            self.rightLabel.textColor = self.inactiveTitleColor;
+            self.centerLabel.textColor = self.activeTitleColor;
+        }
     }
     else {
         self.leftLabel.center = initialLeftCenter;
@@ -195,50 +213,29 @@
 
 - (void)shiftRight
 {
-    self.shiftPercentage = 0.0f;
-    
-    NSUInteger nextIndex = [VGIndexUtilities nextIndexOfIndex:self.currentTitleIndex numberOfItems:self.carouselTitles.count];
-    
+    NSUInteger nextIndex = [VGIndexUtilities previousIndexOfIndex:self.currentTitleIndex numberOfItems:self.carouselTitles.count];
     self.currentTitleIndex = nextIndex;
+    self.shiftPercentage = 0.0f;
     
     UILabel *temporaryLabel = self.rightLabel;
     self.rightLabel = self.centerLabel;
     self.centerLabel = self.leftLabel;
     self.leftLabel = self.floatingLabel;
     self.floatingLabel = temporaryLabel;
-    
-    [UIView animateWithDuration:0.3f animations:^{
-        [self layoutBasedOnPercentage];
-    }];
 }
 
 - (void)shiftLeft
 {
-    self.shiftPercentage = 0.0f;
-    
-    NSUInteger nextIndex = [VGIndexUtilities previousIndexOfIndex:self.currentTitleIndex numberOfItems:self.carouselTitles.count];
-    
+    NSUInteger nextIndex = [VGIndexUtilities nextIndexOfIndex:self.currentTitleIndex numberOfItems:self.carouselTitles.count];
     self.currentTitleIndex = nextIndex;
+    self.shiftPercentage = 0.0f;
     
     UILabel *temporaryLabel = self.leftLabel;
     self.leftLabel = self.centerLabel;
     self.centerLabel = self.rightLabel;
     self.rightLabel = self.floatingLabel;
     self.floatingLabel = temporaryLabel;
-    
-    [UIView animateWithDuration:0.3f animations:^{
-        [self layoutBasedOnPercentage];
-    }];
 }
-
-- (void)reset
-{
-    self.shiftPercentage = 0.0f;
-    [UIView animateWithDuration:0.3f animations:^{
-        [self layoutBasedOnPercentage];
-    }];
-}
-
 
 
 /*

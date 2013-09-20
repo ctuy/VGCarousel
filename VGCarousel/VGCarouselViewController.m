@@ -74,6 +74,7 @@
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
     self.carouselTitleView = [[VGCarouselTitleView alloc] initWithTitles:self.carouselTitles];
+    self.carouselTitleView.thresholdPercentage = self.percentageOfDistanceOfTranslationToScreenToConsiderChange;
     [self.view addSubview:self.carouselTitleView];
     [self.carouselTitleView sizeToFit];
     
@@ -160,7 +161,6 @@
             float change = (translation.x / (self.view.bounds.size.width));
             change = (change > 1) ? 1 : ((change < -1) ? -1 : change);
             self.carouselTitleView.shiftPercentage = change;
-            [self.carouselTitleView setNeedsLayout];
             if (translation.x > 0) {
                 if (!self.leftCarouselViewController) {
                     self.leftCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
@@ -175,6 +175,7 @@
                 [UIView animateWithDuration:0.25f animations:^{
                     self.leftCarouselViewController.view.center = CGPointMake(self.leftCarouselInitialCenter.x + translation.x, self.leftCarouselInitialCenter.y);
                     self.centerCarouselViewController.view.center = CGPointMake(self.centerCarouselInitialCenter.x + translation.x, self.centerCarouselInitialCenter.y);
+                    [self.carouselTitleView layoutBasedOnPercentage];
                 } completion:^(BOOL finished) {
                     if (!self.leftCarouselViewControllerTriggeredDidMove) {
                         self.leftCarouselViewControllerTriggeredDidMove = YES;
@@ -198,7 +199,8 @@
                 }
                 [UIView animateWithDuration:0.25f animations:^{
                     self.rightCarouselViewController.view.center = CGPointMake(self.rightCarouselInitialCenter.x + translation.x, self.rightCarouselInitialCenter.y);
-                    self.centerCarouselViewController.view.center = CGPointMake(self.centerCarouselInitialCenter.x + translation.x, self.centerCarouselInitialCenter.y);                    
+                    self.centerCarouselViewController.view.center = CGPointMake(self.centerCarouselInitialCenter.x + translation.x, self.centerCarouselInitialCenter.y);
+                    [self.carouselTitleView layoutBasedOnPercentage];
                 } completion:^(BOOL finished) {
                     if (!self.rightCarouselViewControllerTriggeredDidMove) {
                         self.rightCarouselViewControllerTriggeredDidMove = YES;
@@ -215,7 +217,7 @@
         {
             if (fabs(translation.x) > self.carouselContentView.bounds.size.width * self.percentageOfDistanceOfTranslationToScreenToConsiderChange) {
                 if (translation.x > 0) {
-                    [self.carouselTitleView shiftRight];
+                    self.carouselTitleView.shiftPercentage = 1.0f;
                     [self.centerCarouselViewController willMoveToParentViewController:nil];
 #if MANUAL_APPEARANCE
                     [self.centerCarouselViewController beginAppearanceTransition:NO animated:YES];
@@ -223,6 +225,7 @@
                     [UIView animateWithDuration:0.3f animations:^{
                         self.centerCarouselViewController.view.center = self.rightCarouselInitialCenter;
                         self.leftCarouselViewController.view.center = self.centerCarouselInitialCenter;
+                        [self.carouselTitleView layoutBasedOnPercentage];
                     } completion:^(BOOL finished) {
                         [self.centerCarouselViewController.view removeFromSuperview];
 #if MANUAL_APPEARANCE
@@ -234,10 +237,11 @@
                         self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:self.centerCarouselViewController];
                         self.leftCarouselViewController = nil;
                         self.centerCarouselViewController.view.userInteractionEnabled = YES;
+                        [self.carouselTitleView shiftRight];
                     }];
                 }
                 else if (translation.x < 0) {
-                    [self.carouselTitleView shiftLeft];
+                    self.carouselTitleView.shiftPercentage = -1.0f;
                     [self.centerCarouselViewController willMoveToParentViewController:nil];
 #if MANUAL_APPEARANCE
                     [self.centerCarouselViewController beginAppearanceTransition:NO animated:YES];
@@ -245,6 +249,7 @@
                     [UIView animateWithDuration:0.3f animations:^{
                         self.centerCarouselViewController.view.center = self.leftCarouselInitialCenter;
                         self.rightCarouselViewController.view.center = self.centerCarouselInitialCenter;
+                        [self.carouselTitleView layoutBasedOnPercentage];
                     } completion:^(BOOL finished) {
                         [self.centerCarouselViewController.view removeFromSuperview];
 #if MANUAL_APPEARANCE
@@ -256,11 +261,12 @@
                         self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:self.centerCarouselViewController];
                         self.rightCarouselViewController = nil;
                         self.centerCarouselViewController.view.userInteractionEnabled = YES;
+                        [self.carouselTitleView shiftLeft];
                     }];
                 }
             }
             else {
-                [self.carouselTitleView reset];
+                self.carouselTitleView.shiftPercentage = 0.0f;
                 if (self.leftCarouselViewController) {
                     [self.leftCarouselViewController willMoveToParentViewController:nil];
 #if MANUAL_APPEARANCE
@@ -281,6 +287,7 @@
                     if (self.rightCarouselViewController) {
                         self.rightCarouselViewController.view.center = self.rightCarouselInitialCenter;
                     }
+                    [self.carouselTitleView layoutBasedOnPercentage];
                 } completion:^(BOOL finished) {
                     self.centerCarouselViewController.view.userInteractionEnabled = YES;
                     if (self.leftCarouselViewController) {

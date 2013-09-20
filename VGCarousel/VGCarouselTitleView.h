@@ -16,10 +16,11 @@
 @property (nonatomic, strong) UIColor *inactiveTitleColor;
 @property (nonatomic) float shiftPercentage;
 @property (nonatomic) NSUInteger currentTitleIndex;
+@property (nonatomic) float thresholdPercentage;
 
 - (id)initWithTitles:(NSArray *)titles;
 - (void)shiftRight;
 - (void)shiftLeft;
-- (void)reset;
+- (void)layoutBasedOnPercentage;
 
 @end
