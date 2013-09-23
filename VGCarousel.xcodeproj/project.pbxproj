@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		567BA72A17EC27F900FDA2C8 /* VGCarouselTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 567BA72917EC27F900FDA2C8 /* VGCarouselTitleView.m */; };
-		567BA72D17EC319500FDA2C8 /* VGIndexUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 567BA72C17EC319500FDA2C8 /* VGIndexUtilities.m */; };
 		56CE7CC217E9903D00E344F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56CE7CC117E9903D00E344F9 /* UIKit.framework */; };
 		56CE7CC417E9903D00E344F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56CE7CC317E9903D00E344F9 /* Foundation.framework */; };
 		56CE7CC617E9903D00E344F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56CE7CC517E9903D00E344F9 /* CoreGraphics.framework */; };
@@ -18,15 +16,13 @@
 		56CE7CD417E9903D00E344F9 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CE7CD317E9903D00E344F9 /* Default.png */; };
 		56CE7CD617E9903D00E344F9 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CE7CD517E9903D00E344F9 /* Default@2x.png */; };
 		56CE7CD817E9903D00E344F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 56CE7CD717E9903D00E344F9 /* Default-568h@2x.png */; };
-		56CE7CE017E9906900E344F9 /* VGCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56CE7CDF17E9906900E344F9 /* VGCarouselViewController.m */; };
 		56CE7CE317E9BF0D00E344F9 /* VGTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56CE7CE217E9BF0D00E344F9 /* VGTestViewController.m */; };
+		56D08E2917F010C60060AAC5 /* VGCarouselTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D08E2417F010C60060AAC5 /* VGCarouselTitleView.m */; };
+		56D08E2A17F010C60060AAC5 /* VGCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D08E2617F010C60060AAC5 /* VGCarouselViewController.m */; };
+		56D08E2B17F010C60060AAC5 /* VGIndexUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D08E2817F010C60060AAC5 /* VGIndexUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		567BA72817EC27F900FDA2C8 /* VGCarouselTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGCarouselTitleView.h; sourceTree = "<group>"; };
-		567BA72917EC27F900FDA2C8 /* VGCarouselTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGCarouselTitleView.m; sourceTree = "<group>"; };
-		567BA72B17EC319500FDA2C8 /* VGIndexUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGIndexUtilities.h; sourceTree = "<group>"; };
-		567BA72C17EC319500FDA2C8 /* VGIndexUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGIndexUtilities.m; sourceTree = "<group>"; };
 		56CE7CBE17E9903D00E344F9 /* VGCarousel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VGCarousel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56CE7CC117E9903D00E344F9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		56CE7CC317E9903D00E344F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -40,10 +36,14 @@
 		56CE7CD317E9903D00E344F9 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		56CE7CD517E9903D00E344F9 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		56CE7CD717E9903D00E344F9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		56CE7CDE17E9906900E344F9 /* VGCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGCarouselViewController.h; sourceTree = "<group>"; };
-		56CE7CDF17E9906900E344F9 /* VGCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGCarouselViewController.m; sourceTree = "<group>"; };
 		56CE7CE117E9BF0D00E344F9 /* VGTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGTestViewController.h; sourceTree = "<group>"; };
 		56CE7CE217E9BF0D00E344F9 /* VGTestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGTestViewController.m; sourceTree = "<group>"; };
+		56D08E2317F010C60060AAC5 /* VGCarouselTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VGCarouselTitleView.h; path = Source/VGCarouselTitleView.h; sourceTree = "<group>"; };
+		56D08E2417F010C60060AAC5 /* VGCarouselTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VGCarouselTitleView.m; path = Source/VGCarouselTitleView.m; sourceTree = "<group>"; };
+		56D08E2517F010C60060AAC5 /* VGCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VGCarouselViewController.h; path = Source/VGCarouselViewController.h; sourceTree = "<group>"; };
+		56D08E2617F010C60060AAC5 /* VGCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VGCarouselViewController.m; path = Source/VGCarouselViewController.m; sourceTree = "<group>"; };
+		56D08E2717F010C60060AAC5 /* VGIndexUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VGIndexUtilities.h; path = Source/VGIndexUtilities.h; sourceTree = "<group>"; };
+		56D08E2817F010C60060AAC5 /* VGIndexUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VGIndexUtilities.m; path = Source/VGIndexUtilities.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,17 +90,12 @@
 		56CE7CC717E9903D00E344F9 /* VGCarousel */ = {
 			isa = PBXGroup;
 			children = (
+				56D08E2217F010B90060AAC5 /* Source */,
 				56CE7CD017E9903D00E344F9 /* VGAppDelegate.h */,
 				56CE7CD117E9903D00E344F9 /* VGAppDelegate.m */,
 				56CE7CC817E9903D00E344F9 /* Supporting Files */,
-				56CE7CDE17E9906900E344F9 /* VGCarouselViewController.h */,
-				56CE7CDF17E9906900E344F9 /* VGCarouselViewController.m */,
 				56CE7CE117E9BF0D00E344F9 /* VGTestViewController.h */,
 				56CE7CE217E9BF0D00E344F9 /* VGTestViewController.m */,
-				567BA72817EC27F900FDA2C8 /* VGCarouselTitleView.h */,
-				567BA72917EC27F900FDA2C8 /* VGCarouselTitleView.m */,
-				567BA72B17EC319500FDA2C8 /* VGIndexUtilities.h */,
-				567BA72C17EC319500FDA2C8 /* VGIndexUtilities.m */,
 			);
 			path = VGCarousel;
 			sourceTree = "<group>";
@@ -117,6 +112,19 @@
 				56CE7CD717E9903D00E344F9 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		56D08E2217F010B90060AAC5 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				56D08E2317F010C60060AAC5 /* VGCarouselTitleView.h */,
+				56D08E2417F010C60060AAC5 /* VGCarouselTitleView.m */,
+				56D08E2517F010C60060AAC5 /* VGCarouselViewController.h */,
+				56D08E2617F010C60060AAC5 /* VGCarouselViewController.m */,
+				56D08E2717F010C60060AAC5 /* VGIndexUtilities.h */,
+				56D08E2817F010C60060AAC5 /* VGIndexUtilities.m */,
+			);
+			name = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,11 +193,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				567BA72A17EC27F900FDA2C8 /* VGCarouselTitleView.m in Sources */,
+				56D08E2A17F010C60060AAC5 /* VGCarouselViewController.m in Sources */,
+				56D08E2917F010C60060AAC5 /* VGCarouselTitleView.m in Sources */,
 				56CE7CCE17E9903D00E344F9 /* main.m in Sources */,
 				56CE7CD217E9903D00E344F9 /* VGAppDelegate.m in Sources */,
-				56CE7CE017E9906900E344F9 /* VGCarouselViewController.m in Sources */,
-				567BA72D17EC319500FDA2C8 /* VGIndexUtilities.m in Sources */,
+				56D08E2B17F010C60060AAC5 /* VGIndexUtilities.m in Sources */,
 				56CE7CE317E9BF0D00E344F9 /* VGTestViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
