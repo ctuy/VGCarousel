@@ -10,10 +10,14 @@
 #import "VGCarouselTitleView.h"
 #import "VGIndexUtilities.h"
 
-// TODO: checkout bug when panning from left edge closest to screen to right direction then back to left again
-
 #define MANUAL_APPEARANCE   1
 #define DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD 0.4f
+
+typedef NS_ENUM(NSUInteger, ScrollDirection) {
+    ScrollDirectionNone = 0,
+    ScrollDirectionLeft = 1,
+    ScrollDirectionRight = 2
+};
 
 @interface VGCarouselViewController ()
 
@@ -36,6 +40,8 @@
 
 @property (nonatomic) BOOL leftCarouselViewControllerTriggeredDidMove;
 @property (nonatomic) BOOL rightCarouselViewControllerTriggeredDidMove;
+
+@property (nonatomic) ScrollDirection lastScrollDirection;
 
 @end
 
@@ -146,6 +152,19 @@
     return vc;
 }
 
+- (ScrollDirection)scrollDirectionForTranslation:(CGFloat)translation
+{
+    if (translation > 0) {
+        return ScrollDirectionRight;
+    }
+    else if (translation < 0) {
+        return ScrollDirectionLeft;
+    }
+    else {
+        return ScrollDirectionNone;
+    }
+}
+
 - (void)handlePanGesture:(UIGestureRecognizer *)gestureRecognizer
 {
     UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
@@ -157,6 +176,7 @@
             self.centerCarouselInitialCenter = CGPointMake(CGRectGetMidX(self.carouselContentView.bounds), CGRectGetMidY(self.carouselContentView.bounds));
             self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
             self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
+            self.lastScrollDirection = ScrollDirectionNone;
         }
             break;
         case UIGestureRecognizerStateChanged:
@@ -164,6 +184,11 @@
             float change = (translation.x / (self.view.bounds.size.width));
             change = (change > 1) ? 1 : ((change < -1) ? -1 : change);
             self.carouselTitleView.shiftPercentage = change;
+            
+            ScrollDirection currentDirection = [self scrollDirectionForTranslation:translation.x];
+            BOOL shouldHideViewControllerFromOtherDirection = (currentDirection != self.lastScrollDirection && self.lastScrollDirection != ScrollDirectionNone && currentDirection != ScrollDirectionNone);
+            self.lastScrollDirection = currentDirection;
+            
             if (translation.x > 0) {
                 if (!self.leftCarouselViewController) {
                     self.leftCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
@@ -175,9 +200,22 @@
                     [self.leftCarouselViewController beginAppearanceTransition:YES animated:YES];
 #endif
                 }
+                if (shouldHideViewControllerFromOtherDirection) {
+                    if (self.rightCarouselViewController) {
+                        [self.rightCarouselViewController willMoveToParentViewController:nil];
+#if MANUAL_APPEARANCE
+                        [self.rightCarouselViewController beginAppearanceTransition:NO animated:YES];
+#endif
+                    }
+                }
                 [UIView animateWithDuration:0.25f animations:^{
                     self.leftCarouselViewController.view.center = CGPointMake(self.leftCarouselInitialCenter.x + translation.x, self.leftCarouselInitialCenter.y);
                     self.centerCarouselViewController.view.center = CGPointMake(self.centerCarouselInitialCenter.x + translation.x, self.centerCarouselInitialCenter.y);
+                    if (shouldHideViewControllerFromOtherDirection) {
+                        if (self.rightCarouselViewController) {
+                            self.rightCarouselViewController.view.center = self.rightCarouselInitialCenter;
+                        }
+                    }
                     [self.carouselTitleView layoutBasedOnPercentage];
                 } completion:^(BOOL finished) {
                     if (!self.leftCarouselViewControllerTriggeredDidMove) {
@@ -186,6 +224,16 @@
                         [self.leftCarouselViewController endAppearanceTransition];
 #endif
                         [self.leftCarouselViewController didMoveToParentViewController:self];
+                    }
+                    if (shouldHideViewControllerFromOtherDirection) {
+                        if (self.rightCarouselViewController) {
+                            [self.rightCarouselViewController.view removeFromSuperview];
+#if MANUAL_APPEARANCE
+                            [self.rightCarouselViewController endAppearanceTransition];
+#endif
+                            [self.rightCarouselViewController removeFromParentViewController];
+                            self.rightCarouselViewController = nil;
+                        }
                     }
                 }];
             }
@@ -200,9 +248,22 @@
                     [self.rightCarouselViewController beginAppearanceTransition:YES animated:YES];
 #endif
                 }
+                if (shouldHideViewControllerFromOtherDirection) {
+                    if (self.leftCarouselViewController) {
+                        [self.leftCarouselViewController willMoveToParentViewController:nil];
+#if MANUAL_APPEARANCE
+                        [self.leftCarouselViewController beginAppearanceTransition:NO animated:YES];
+#endif
+                    }
+                }
                 [UIView animateWithDuration:0.25f animations:^{
                     self.rightCarouselViewController.view.center = CGPointMake(self.rightCarouselInitialCenter.x + translation.x, self.rightCarouselInitialCenter.y);
                     self.centerCarouselViewController.view.center = CGPointMake(self.centerCarouselInitialCenter.x + translation.x, self.centerCarouselInitialCenter.y);
+                    if (shouldHideViewControllerFromOtherDirection) {
+                        if (self.leftCarouselViewController) {
+                            self.leftCarouselViewController.view.center = self.leftCarouselInitialCenter;
+                        }
+                    }
                     [self.carouselTitleView layoutBasedOnPercentage];
                 } completion:^(BOOL finished) {
                     if (!self.rightCarouselViewControllerTriggeredDidMove) {
@@ -211,6 +272,16 @@
                         [self.rightCarouselViewController endAppearanceTransition];
 #endif                        
                         [self.rightCarouselViewController didMoveToParentViewController:self];
+                    }
+                    if (shouldHideViewControllerFromOtherDirection) {
+                        if (self.leftCarouselViewController) {
+                            [self.leftCarouselViewController.view removeFromSuperview];
+#if MANUAL_APPEARANCE
+                            [self.leftCarouselViewController endAppearanceTransition];
+#endif
+                            [self.leftCarouselViewController removeFromParentViewController];
+                            self.leftCarouselViewController = nil;
+                        }
                     }
                 }];
             }
