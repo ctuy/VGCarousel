@@ -312,6 +312,9 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         self.leftCarouselViewController = nil;
                         self.centerCarouselViewController.view.userInteractionEnabled = YES;
                         [self.carouselTitleView shiftRight];
+                        if ([self.delegate respondsToSelector:@selector(carouselViewController:didChangeToIndex:)]) {
+                            [self.delegate carouselViewController:self didChangeToIndex:self.indexOfCurrentCenterCarouselViewController];
+                        }
                     }];
                 }
                 else if (translation.x < 0) {
@@ -336,6 +339,9 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         self.rightCarouselViewController = nil;
                         self.centerCarouselViewController.view.userInteractionEnabled = YES;
                         [self.carouselTitleView shiftLeft];
+                        if ([self.delegate respondsToSelector:@selector(carouselViewController:didChangeToIndex:)]) {
+                            [self.delegate carouselViewController:self didChangeToIndex:self.indexOfCurrentCenterCarouselViewController];
+                        }                        
                     }];
                 }
             }

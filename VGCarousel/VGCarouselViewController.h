@@ -13,6 +13,7 @@
 
 @protocol VGCarouselViewControllerDelegate <NSObject>
 
+@optional;
 - (void)carouselViewController:(VGCarouselViewController *)carouselViewController didChangeToIndex:(NSUInteger)index;
 
 @end
