@@ -72,6 +72,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
         self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
         
         self.percentageTranslationThreshold = DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD;
+        
+        self.stateOfForwardAppearance = YES;
     }
     return self;
 }
