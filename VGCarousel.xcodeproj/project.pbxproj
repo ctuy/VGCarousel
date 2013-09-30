@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56BD13C617F95EEA00427E09 /* UIViewController+VGCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56BD13C517F95EEA00427E09 /* UIViewController+VGCarousel.m */; };
 		56CE7CC217E9903D00E344F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56CE7CC117E9903D00E344F9 /* UIKit.framework */; };
 		56CE7CC417E9903D00E344F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56CE7CC317E9903D00E344F9 /* Foundation.framework */; };
 		56CE7CC617E9903D00E344F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56CE7CC517E9903D00E344F9 /* CoreGraphics.framework */; };
@@ -23,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		56BD13C417F95EEA00427E09 /* UIViewController+VGCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+VGCarousel.h"; path = "Source/UIViewController+VGCarousel.h"; sourceTree = "<group>"; };
+		56BD13C517F95EEA00427E09 /* UIViewController+VGCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+VGCarousel.m"; path = "Source/UIViewController+VGCarousel.m"; sourceTree = "<group>"; };
 		56CE7CBE17E9903D00E344F9 /* VGCarousel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VGCarousel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56CE7CC117E9903D00E344F9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		56CE7CC317E9903D00E344F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -123,6 +126,8 @@
 				56D08E2617F010C60060AAC5 /* VGCarouselViewController.m */,
 				56D08E2717F010C60060AAC5 /* VGIndexUtilities.h */,
 				56D08E2817F010C60060AAC5 /* VGIndexUtilities.m */,
+				56BD13C417F95EEA00427E09 /* UIViewController+VGCarousel.h */,
+				56BD13C517F95EEA00427E09 /* UIViewController+VGCarousel.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -196,6 +201,7 @@
 				56D08E2A17F010C60060AAC5 /* VGCarouselViewController.m in Sources */,
 				56D08E2917F010C60060AAC5 /* VGCarouselTitleView.m in Sources */,
 				56CE7CCE17E9903D00E344F9 /* main.m in Sources */,
+				56BD13C617F95EEA00427E09 /* UIViewController+VGCarousel.m in Sources */,
 				56CE7CD217E9903D00E344F9 /* VGAppDelegate.m in Sources */,
 				56D08E2B17F010C60060AAC5 /* VGIndexUtilities.m in Sources */,
 				56CE7CE317E9BF0D00E344F9 /* VGTestViewController.m in Sources */,
