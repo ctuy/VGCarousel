@@ -11,5 +11,6 @@
 @interface VGTestViewController : UIViewController
 
 @property (nonatomic, strong) UIColor *loadBackgroundColor;
+@property (nonatomic) BOOL enableLogging;
 
 @end
