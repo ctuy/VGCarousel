@@ -401,7 +401,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     self.leftCarouselViewControllerTriggeredDidMove = NO;
     self.rightCarouselViewControllerTriggeredDidMove = NO;
     
-    if (self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]) {
+    if ([self isViewLoaded] && self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]) {
         [self setupInitialViewController:[self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]];
     }
 }
