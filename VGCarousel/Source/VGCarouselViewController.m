@@ -120,14 +120,10 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 {
     [self addChildViewController:vc];
     [self.carouselContentView addSubview:vc.view];
-    [vc beginAppearanceTransition:YES animated:NO];
-    [vc endAppearanceTransition];
     [vc didMoveToParentViewController:self];
     if (self.centerCarouselViewController) {
-        [self.centerCarouselViewController beginAppearanceTransition:NO animated:NO];
         [self.centerCarouselViewController willMoveToParentViewController:nil];
         [self.centerCarouselViewController.view removeFromSuperview];
-        [self.centerCarouselViewController endAppearanceTransition];        
         [self.centerCarouselViewController removeFromParentViewController];
     }
     self.centerCarouselViewController = vc;
