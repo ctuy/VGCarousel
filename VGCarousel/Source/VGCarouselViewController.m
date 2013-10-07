@@ -40,8 +40,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 @property (nonatomic) ScrollDirection lastScrollDirection;
 
-@property (nonatomic) BOOL stateOfForwardAppearance;
-
 @end
 
 @implementation VGCarouselViewController
@@ -52,8 +50,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     if (self) {
         // Custom initialization
         self.percentageTranslationThreshold = DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD;
-        
-        self.stateOfForwardAppearance = YES;
     }
     return self;
 }
@@ -73,8 +69,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
         self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
         
         self.percentageTranslationThreshold = DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD;
-        
-        self.stateOfForwardAppearance = YES;
     }
     return self;
 }
@@ -124,8 +118,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 - (void)setupInitialViewController:(UIViewController *)vc
 {
-    BOOL stateOfForwarding = self.stateOfForwardAppearance;
-    self.stateOfForwardAppearance = NO;
     [self addChildViewController:vc];
     [self.carouselContentView addSubview:vc.view];
     [vc beginAppearanceTransition:YES animated:NO];
@@ -140,7 +132,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     }
     self.centerCarouselViewController = vc;
     self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
-    self.stateOfForwardAppearance = stateOfForwarding;
 }
 
 - (UIViewController *)carouselViewControllerAtIndex:(NSUInteger)index
@@ -194,7 +185,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
             self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
             self.lastScrollDirection = ScrollDirectionNone;
-            self.stateOfForwardAppearance = NO;
         }
             break;
         case UIGestureRecognizerStateChanged:
@@ -313,7 +303,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         if ([self.delegate respondsToSelector:@selector(carouselViewController:didChangeToIndex:)]) {
                             [self.delegate carouselViewController:self didChangeToIndex:self.indexOfCurrentCenterCarouselViewController];
                         }
-                        self.stateOfForwardAppearance = YES;
                     }];
                 }
                 else if (translation.x < 0) {
@@ -337,7 +326,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         if ([self.delegate respondsToSelector:@selector(carouselViewController:didChangeToIndex:)]) {
                             [self.delegate carouselViewController:self didChangeToIndex:self.indexOfCurrentCenterCarouselViewController];
                         }
-                        self.stateOfForwardAppearance = YES;
                     }];
                 }
             }
@@ -374,13 +362,9 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         [self.rightCarouselViewController removeFromParentViewController];
                         self.rightCarouselViewController = nil;
                     }
-                    self.stateOfForwardAppearance = YES;
-                }];                
+                }];
             }
         }
-            break;
-        case UIGestureRecognizerStateCancelled:
-            self.stateOfForwardAppearance = YES;
             break;
         default:
             break;
@@ -389,7 +373,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 - (BOOL)shouldAutomaticallyForwardAppearanceMethods
 {
-    return self.stateOfForwardAppearance;
+    return NO;
 }
 
 - (void)setCarouselViewControllers:(NSArray *)carouselViewControllers
@@ -411,6 +395,30 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     if ([self isViewLoaded] && self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]) {
         [self setupInitialViewController:[self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.centerCarouselViewController beginAppearanceTransition:YES animated:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.centerCarouselViewController endAppearanceTransition];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.centerCarouselViewController beginAppearanceTransition:NO animated:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.centerCarouselViewController endAppearanceTransition];
 }
 
 @end
