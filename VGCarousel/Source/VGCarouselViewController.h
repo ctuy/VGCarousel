@@ -27,5 +27,6 @@
 @property (nonatomic, strong) NSArray *carouselViewControllers;
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
+- (id)initWithRootViewController:(UIViewController *)viewController;
 
 @end

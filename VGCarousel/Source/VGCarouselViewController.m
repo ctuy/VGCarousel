@@ -76,6 +76,11 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     return self;
 }
 
+- (id)initWithRootViewController:(UIViewController *)viewController
+{
+    return [self initWithViewControllers:@[viewController]];
+}
+
 - (void)loadView
 {
     CGRect viewFrame = [[UIScreen mainScreen] applicationFrame];
@@ -396,8 +401,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     self.leftCarouselViewControllerTriggeredDidMove = NO;
     self.rightCarouselViewControllerTriggeredDidMove = NO;
     
-    if (self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:0]) {
-        [self setupInitialViewController:[self.carouselViewControllers objectAtIndex:0]];
+    if (self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]) {
+        [self setupInitialViewController:[self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]];
     }
 }
 
