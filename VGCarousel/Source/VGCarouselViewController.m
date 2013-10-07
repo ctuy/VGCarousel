@@ -122,15 +122,19 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 - (void)setupInitialViewController:(UIViewController *)vc
 {
     BOOL stateOfForwarding = self.stateOfForwardAppearance;
-    self.stateOfForwardAppearance = YES;
+    self.stateOfForwardAppearance = NO;
+    [vc beginAppearanceTransition:YES animated:NO];
     [self addChildViewController:vc];
     [self.carouselContentView addSubview:vc.view];
     [vc didMoveToParentViewController:self];
     if (self.centerCarouselViewController) {
+        [self.centerCarouselViewController beginAppearanceTransition:NO animated:NO];
         [self.centerCarouselViewController willMoveToParentViewController:nil];
         [self.centerCarouselViewController.view removeFromSuperview];
+        [self.centerCarouselViewController endAppearanceTransition];        
         [self.centerCarouselViewController removeFromParentViewController];
     }
+    [vc endAppearanceTransition];
     self.centerCarouselViewController = vc;
     self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
     self.stateOfForwardAppearance = stateOfForwarding;
