@@ -239,7 +239,7 @@
 
 - (void)setCarouselTitles:(NSArray *)carouselTitles
 {
-    self.carouselTitles = carouselTitles;
+    _carouselTitles = carouselTitles;
     [self setNeedsLayout];
 }
 
