@@ -237,6 +237,11 @@
     self.floatingLabel = temporaryLabel;
 }
 
+- (void)setCarouselTitles:(NSArray *)carouselTitles
+{
+    self.carouselTitles = carouselTitles;
+    [self setNeedsLayout];
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.
