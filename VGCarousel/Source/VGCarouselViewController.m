@@ -20,8 +20,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 @interface VGCarouselViewController ()
 
-@property (nonatomic, strong) NSArray *carouselViewControllers;
-
 @property (nonatomic, strong) VGCarouselTitleView *carouselTitleView;
 @property (nonatomic, strong) NSArray *carouselTitles;
 
@@ -61,7 +59,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 {
     self = [self initWithNibName:nil bundle:nil];
     if (self) {
-        self.carouselViewControllers = viewControllers;
+        _carouselViewControllers = viewControllers;
         
         NSMutableArray *carouselTitles = [NSMutableArray arrayWithCapacity:self.carouselViewControllers.count];
         [self.carouselViewControllers enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -118,11 +116,19 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 - (void)setupInitialViewController:(UIViewController *)vc
 {
+    BOOL stateOfForwarding = self.stateOfForwardAppearance;
+    self.stateOfForwardAppearance = YES;
     [self addChildViewController:vc];
     [self.carouselContentView addSubview:vc.view];
     [vc didMoveToParentViewController:self];
+    if (self.centerCarouselViewController) {
+        [self.centerCarouselViewController willMoveToParentViewController:nil];
+        [self.centerCarouselViewController.view removeFromSuperview];
+        [self.centerCarouselViewController removeFromParentViewController];
+    }
     self.centerCarouselViewController = vc;
     self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
+    self.stateOfForwardAppearance = stateOfForwarding;
 }
 
 - (UIViewController *)carouselViewControllerAtIndex:(NSUInteger)index
@@ -372,6 +378,27 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 - (BOOL)shouldAutomaticallyForwardAppearanceMethods
 {
     return self.stateOfForwardAppearance;
+}
+
+- (void)setCarouselViewControllers:(NSArray *)carouselViewControllers
+{
+    _carouselViewControllers = carouselViewControllers;
+    
+    NSMutableArray *carouselTitles = [NSMutableArray arrayWithCapacity:self.carouselViewControllers.count];
+    [self.carouselViewControllers enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        UIViewController *vc = (UIViewController *)obj;
+        [carouselTitles addObject:(vc.title.length > 0 ? vc.title : @"")];
+    }];
+    self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
+    
+    self.carouselTitleView.carouselTitles = self.carouselTitles;
+    
+    self.leftCarouselViewControllerTriggeredDidMove = NO;
+    self.rightCarouselViewControllerTriggeredDidMove = NO;
+    
+    if (self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:0]) {
+        [self setupInitialViewController:[self.carouselViewControllers objectAtIndex:0]];
+    }
 }
 
 @end

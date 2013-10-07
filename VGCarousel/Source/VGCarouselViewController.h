@@ -24,6 +24,7 @@
 @property (nonatomic, strong, readonly) VGCarouselTitleView *carouselTitleView;
 @property (nonatomic) CGFloat percentageTranslationThreshold;
 @property (nonatomic, readonly) NSUInteger indexOfCurrentCenterCarouselViewController;
+@property (nonatomic, strong) NSArray *carouselViewControllers;
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
 
