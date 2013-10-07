@@ -135,7 +135,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
         [self.centerCarouselViewController endAppearanceTransition];        
         [self.centerCarouselViewController removeFromParentViewController];
     }
-    [vc endAppearanceTransition];
     self.centerCarouselViewController = vc;
     self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
     self.stateOfForwardAppearance = stateOfForwarding;
