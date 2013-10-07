@@ -51,6 +51,9 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.percentageTranslationThreshold = DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD;
+        
+        self.stateOfForwardAppearance = YES;
     }
     return self;
 }
