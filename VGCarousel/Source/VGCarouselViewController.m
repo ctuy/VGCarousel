@@ -9,6 +9,7 @@
 #import "VGCarouselViewController.h"
 #import "VGCarouselTitleView.h"
 #import "VGIndexUtilities.h"
+#import "UIViewController+VGCarousel.h"
 
 #define DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD 0.4f
 
@@ -120,10 +121,20 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 {
     [self addChildViewController:vc];
     [self.carouselContentView addSubview:vc.view];
+    if ([self isVisible]) {
+        [vc beginAppearanceTransition:YES animated:NO];
+        [vc endAppearanceTransition];
+    }
     [vc didMoveToParentViewController:self];
     if (self.centerCarouselViewController) {
+        if ([self isVisible]) {
+            [self.centerCarouselViewController beginAppearanceTransition:NO animated:NO];
+        }
         [self.centerCarouselViewController willMoveToParentViewController:nil];
         [self.centerCarouselViewController.view removeFromSuperview];
+        if ([self isVisible]) {
+            [self.centerCarouselViewController endAppearanceTransition];
+        }
         [self.centerCarouselViewController removeFromParentViewController];
     }
     self.centerCarouselViewController = vc;
