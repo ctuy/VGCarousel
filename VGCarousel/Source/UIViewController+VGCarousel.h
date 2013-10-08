@@ -13,5 +13,6 @@
 @interface UIViewController (VGCarousel)
 
 - (VGCarouselViewController *)carouselViewController;
+- (BOOL)isVisible;
 
 @end

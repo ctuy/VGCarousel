@@ -22,4 +22,9 @@
     }
 }
 
+- (BOOL)isVisible
+{
+    return [self isViewLoaded] && self.view.window;
+}
+
 @end
