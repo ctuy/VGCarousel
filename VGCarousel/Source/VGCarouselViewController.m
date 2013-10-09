@@ -144,8 +144,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 - (UIViewController *)carouselViewControllerAtIndex:(NSUInteger)index
 {
     UIViewController *vc = [self.carouselViewControllers objectAtIndex:index];
+    vc.view.frame = self.carouselContentView.bounds;
     if (!vc.isViewLoaded) {
-        vc.view.frame = self.carouselContentView.bounds;
         vc.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     }
     return vc;
@@ -404,7 +404,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     self.carouselTitleView.currentTitleIndex = indexToLoad;
     
     if ([self isViewLoaded] && self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:indexToLoad]) {
-        [self setupInitialViewController:[self.carouselViewControllers objectAtIndex:indexToLoad]];
+        [self setupInitialViewController:[self carouselViewControllerAtIndex:indexToLoad]];
     }
 }
 
