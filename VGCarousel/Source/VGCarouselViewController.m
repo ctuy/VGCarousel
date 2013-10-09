@@ -83,7 +83,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 {
     CGRect viewFrame = [[UIScreen mainScreen] applicationFrame];
     self.view = [[UIView alloc] initWithFrame:viewFrame];
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor clearColor];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
     self.carouselTitleView = [[VGCarouselTitleView alloc] initWithTitles:self.carouselTitles];
@@ -97,7 +97,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     }
     
     self.carouselContentView = [[UIView alloc] initWithFrame:CGRectMake(0, self.carouselTitleView.bounds.size.height, viewFrame.size.width, viewFrame.size.height - self.carouselTitleView.bounds.size.height)];
-    self.carouselContentView.backgroundColor = [UIColor yellowColor];
+    self.carouselContentView.backgroundColor = [UIColor clearColor];
     self.carouselContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.carouselContentView];
 }
@@ -119,13 +119,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 - (void)setupInitialViewController:(UIViewController *)vc
 {
-    [self addChildViewController:vc];
-    [self.carouselContentView addSubview:vc.view];
-    if ([self isVisible]) {
-        [vc beginAppearanceTransition:YES animated:NO];
-        [vc endAppearanceTransition];
-    }
-    [vc didMoveToParentViewController:self];
     if (self.centerCarouselViewController) {
         if ([self isVisible]) {
             [self.centerCarouselViewController beginAppearanceTransition:NO animated:NO];
@@ -137,6 +130,13 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
         }
         [self.centerCarouselViewController removeFromParentViewController];
     }
+    [self addChildViewController:vc];
+    [self.carouselContentView addSubview:vc.view];
+    if ([self isVisible]) {
+        [vc beginAppearanceTransition:YES animated:NO];
+        [vc endAppearanceTransition];
+    }
+    [vc didMoveToParentViewController:self];
     self.centerCarouselViewController = vc;
     self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:vc];
 }
