@@ -243,6 +243,12 @@
     [self setNeedsLayout];
 }
 
+- (void)setCurrentTitleIndex:(NSUInteger)currentTitleIndex
+{
+    _currentTitleIndex = currentTitleIndex;
+    [self setNeedsLayout];
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
