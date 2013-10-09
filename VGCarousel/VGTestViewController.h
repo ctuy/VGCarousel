@@ -8,9 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+@class VGTestViewController;
+
+@protocol VGTestViewControllerDelegate <NSObject>
+
+- (void)testViewControllerTappedPlus:(VGTestViewController *)testViewController;
+- (void)testViewControllerTappedMinus:(VGTestViewController *)testViewController;
+
+@end
+
 @interface VGTestViewController : UIViewController
 
 @property (nonatomic, strong) UIColor *loadBackgroundColor;
 @property (nonatomic) BOOL enableLogging;
+@property (nonatomic, assign) id <VGTestViewControllerDelegate> delegate;
 
 @end

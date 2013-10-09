@@ -33,6 +33,20 @@
     if (self.enableLogging) {
         NSLog(@"%@:%@:%@", self.title, NSStringFromSelector(_cmd), self);
     }
+    
+    UIButton *plusButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [plusButton setTitle:@"+" forState:UIControlStateNormal];
+    [plusButton sizeToFit];
+    plusButton.center = CGPointMake(CGRectGetWidth(self.view.bounds) / 4, CGRectGetMidY(self.view.bounds));
+    [plusButton addTarget:self action:@selector(tappedPlus:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:plusButton];
+    
+    UIButton *minusButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [minusButton setTitle:@"-" forState:UIControlStateNormal];
+    [minusButton sizeToFit];
+    minusButton.center = CGPointMake(CGRectGetWidth(self.view.bounds) * 3 / 4, CGRectGetMidY(self.view.bounds));
+    [minusButton addTarget:self action:@selector(tappedMinus:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:minusButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -98,6 +112,20 @@
             self.view.backgroundColor = self.loadBackgroundColor;
         }];
     }];
+}
+
+- (void)tappedPlus:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(testViewControllerTappedPlus:)]) {
+        [self.delegate testViewControllerTappedPlus:self];
+    }
+}
+
+- (void)tappedMinus:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(testViewControllerTappedMinus:)]) {
+        [self.delegate testViewControllerTappedMinus:self];
+    }
 }
 
 @end
