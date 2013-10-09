@@ -10,6 +10,13 @@
 #import "VGCarouselViewController.h"
 #import "VGTestViewController.h"
 
+@interface VGAppDelegate () <VGTestViewControllerDelegate>
+
+@property (nonatomic, strong) VGCarouselViewController *carouselVC;
+@property (nonatomic, strong) NSArray *contentVCs;
+
+@end
+
 @implementation VGAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -19,22 +26,28 @@
     VGTestViewController *controllerA = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerA.title = NSLocalizedString(@"VC1", @"");
     controllerA.loadBackgroundColor = [UIColor grayColor];
+    controllerA.delegate = self;
+
     VGTestViewController *controllerB = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerB.title = NSLocalizedString(@"VC2", @"");
     controllerB.loadBackgroundColor = [UIColor lightGrayColor];
+    controllerB.delegate = self;
     
     VGTestViewController *controllerC = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerC.title = NSLocalizedString(@"VC3", @"");
     controllerC.loadBackgroundColor = [UIColor orangeColor];
+    controllerC.delegate = self;
 
     VGTestViewController *controllerD = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerD.title = NSLocalizedString(@"VC4", @"");
     controllerD.loadBackgroundColor = [UIColor purpleColor];
+    controllerD.delegate = self;
 
+    self.contentVCs = @[controllerA, controllerB, controllerC, controllerD];
 
-    VGCarouselViewController *carouselVC = [[VGCarouselViewController alloc] initWithViewControllers:@[controllerA, controllerB, controllerC, controllerD]];
+    self.carouselVC = [[VGCarouselViewController alloc] initWithViewControllers:self.contentVCs];
 #if 1
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:carouselVC];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.carouselVC];
     self.window.rootViewController = navigationController;
 #else
     self.window.rootViewController = carouselVC;
@@ -69,6 +82,22 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - VGTestViewControllerDelegate
+
+- (void)testViewControllerTappedPlus:(VGTestViewController *)testViewController
+{
+    if (self.carouselVC.carouselViewControllers.count < self.contentVCs.count) {
+        self.carouselVC.carouselViewControllers = [self.carouselVC.carouselViewControllers arrayByAddingObject:[self.contentVCs objectAtIndex:self.carouselVC.carouselViewControllers.count]];
+    }
+}
+
+- (void)testViewControllerTappedMinus:(VGTestViewController *)testViewController
+{
+    if (self.carouselVC.carouselViewControllers.count > 1) {
+        self.carouselVC.carouselViewControllers = [self.carouselVC.carouselViewControllers subarrayWithRange:NSMakeRange(0, self.carouselVC.carouselViewControllers.count - 1)];
+    }
 }
 
 @end
