@@ -22,6 +22,17 @@
     }
 }
 
+- (UINavigationController *)carouselNavigationController
+{
+    VGCarouselViewController *carouselVC = [self carouselViewController];
+    if (carouselVC && carouselVC.navigationController) {
+        return carouselVC.navigationController;
+    }
+    else {
+        return nil;
+    }
+}
+
 - (BOOL)isVisible
 {
     return [self isViewLoaded] && self.view.window;
