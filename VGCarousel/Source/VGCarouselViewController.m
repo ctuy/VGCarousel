@@ -210,6 +210,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     [self addChildViewController:self.leftCarouselViewController];
                     self.leftCarouselViewController.view.userInteractionEnabled = NO;
                     [self.carouselContentView addSubview:self.leftCarouselViewController.view];
+                    [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
                     self.leftCarouselViewControllerTriggeredDidMove = NO;
                     [self.leftCarouselViewController beginAppearanceTransition:YES animated:YES];
                 }
@@ -250,6 +251,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     [self addChildViewController:self.rightCarouselViewController];
                     self.rightCarouselViewController.view.userInteractionEnabled = NO;
                     [self.carouselContentView addSubview:self.rightCarouselViewController.view];
+                    [self.carouselContentView sendSubviewToBack:self.rightCarouselViewController.view];
                     self.rightCarouselViewControllerTriggeredDidMove = NO;
                     [self.rightCarouselViewController beginAppearanceTransition:YES animated:YES];
                 }
