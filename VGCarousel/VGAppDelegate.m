@@ -23,27 +23,34 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    
+    NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+    
     VGTestViewController *controllerA = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerA.title = NSLocalizedString(@"VC1", @"");
     controllerA.loadBackgroundColor = [UIColor grayColor];
     controllerA.delegate = self;
+    [viewControllers addObject:controllerA];
 
     VGTestViewController *controllerB = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerB.title = NSLocalizedString(@"VC2", @"");
     controllerB.loadBackgroundColor = [UIColor lightGrayColor];
     controllerB.delegate = self;
+    [viewControllers addObject:controllerB];
     
     VGTestViewController *controllerC = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerC.title = NSLocalizedString(@"VC3", @"");
     controllerC.loadBackgroundColor = [UIColor orangeColor];
     controllerC.delegate = self;
-
+//    [viewControllers addObject:controllerC];
+    
     VGTestViewController *controllerD = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerD.title = NSLocalizedString(@"VC4", @"");
     controllerD.loadBackgroundColor = [UIColor purpleColor];
     controllerD.delegate = self;
-
-    self.contentVCs = @[controllerA, controllerB, controllerC, controllerD];
+//    [viewControllers addObject:controllerD];
+    
+    self.contentVCs = [NSArray arrayWithArray:viewControllers];
 
     self.carouselVC = [[VGCarouselViewController alloc] initWithViewControllers:self.contentVCs];
 #if 1
