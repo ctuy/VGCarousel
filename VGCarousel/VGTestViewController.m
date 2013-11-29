@@ -58,6 +58,10 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:self.title style:UIBarButtonItemStyleBordered target:self action:@selector(tappedRight:)];
     if ([self.title isEqualToString:@"VC2"]) {
         self.navigationItem.title = nil;
+        self.navigationController.navigationBar.tintColor = [UIColor greenColor];
+    }
+    else {
+        self.navigationController.navigationBar.tintColor = [UIColor blueColor];
     }
 }
 
