@@ -21,6 +21,7 @@
 		56D08E2917F010C60060AAC5 /* VGCarouselTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D08E2417F010C60060AAC5 /* VGCarouselTitleView.m */; };
 		56D08E2A17F010C60060AAC5 /* VGCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D08E2617F010C60060AAC5 /* VGCarouselViewController.m */; };
 		56D08E2B17F010C60060AAC5 /* VGIndexUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D08E2817F010C60060AAC5 /* VGIndexUtilities.m */; };
+		56EC3FC7184878C5005764DE /* UINavigationItem+KVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EC3FC6184878C5005764DE /* UINavigationItem+KVO.m */; };
 		56F75FDD18163E4100E877E6 /* VGLimitedPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56F75FDC18163E4100E877E6 /* VGLimitedPanGestureRecognizer.m */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,8 @@
 		56D08E2617F010C60060AAC5 /* VGCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VGCarouselViewController.m; path = Source/VGCarouselViewController.m; sourceTree = "<group>"; };
 		56D08E2717F010C60060AAC5 /* VGIndexUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VGIndexUtilities.h; path = Source/VGIndexUtilities.h; sourceTree = "<group>"; };
 		56D08E2817F010C60060AAC5 /* VGIndexUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VGIndexUtilities.m; path = Source/VGIndexUtilities.m; sourceTree = "<group>"; };
+		56EC3FC5184878C5005764DE /* UINavigationItem+KVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationItem+KVO.h"; path = "Source/UINavigationItem+KVO.h"; sourceTree = "<group>"; };
+		56EC3FC6184878C5005764DE /* UINavigationItem+KVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationItem+KVO.m"; path = "Source/UINavigationItem+KVO.m"; sourceTree = "<group>"; };
 		56F75FDB18163E4100E877E6 /* VGLimitedPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VGLimitedPanGestureRecognizer.h; path = Source/VGLimitedPanGestureRecognizer.h; sourceTree = "<group>"; };
 		56F75FDC18163E4100E877E6 /* VGLimitedPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VGLimitedPanGestureRecognizer.m; path = Source/VGLimitedPanGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,6 +136,8 @@
 				56BD13C517F95EEA00427E09 /* UIViewController+VGCarousel.m */,
 				56F75FDB18163E4100E877E6 /* VGLimitedPanGestureRecognizer.h */,
 				56F75FDC18163E4100E877E6 /* VGLimitedPanGestureRecognizer.m */,
+				56EC3FC5184878C5005764DE /* UINavigationItem+KVO.h */,
+				56EC3FC6184878C5005764DE /* UINavigationItem+KVO.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -203,6 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56EC3FC7184878C5005764DE /* UINavigationItem+KVO.m in Sources */,
 				56D08E2A17F010C60060AAC5 /* VGCarouselViewController.m in Sources */,
 				56D08E2917F010C60060AAC5 /* VGCarouselTitleView.m in Sources */,
 				56CE7CCE17E9903D00E344F9 /* main.m in Sources */,

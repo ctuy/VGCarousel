@@ -10,6 +10,7 @@
 #import "VGCarouselTitleView.h"
 #import "VGIndexUtilities.h"
 #import "UIViewController+VGCarousel.h"
+#import "UINavigationItem+KVO.h"
 #import "VGLimitedPanGestureRecognizer.h"
 
 #define DEFAULT_PERCENTAGE_TRANSLATION_THRESHOLD 0.4f
@@ -68,6 +69,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
         NSMutableArray *carouselTitles = [NSMutableArray arrayWithCapacity:self.carouselViewControllers.count];
         [self.carouselViewControllers enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             UIViewController *vc = (UIViewController *)obj;
+            [self setupNavigationItemObservationForViewController:vc];
             [carouselTitles addObject:(vc.title.length > 0 ? vc.title : @"")];
         }];
         
@@ -118,6 +120,43 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    static dispatch_once_t onceToken;
+    static NSArray *observedKeyPaths = nil;
+    dispatch_once(&onceToken, ^{
+        observedKeyPaths = @[@"leftBarButtonItem", @"leftBarButtonItems", @"rightBarButtonItem", @"rightBarButtonItems", @"title", @"titleView"];
+    });
+    if (self.navigationController) {
+        UIViewController *vc = (__bridge UIViewController *)context;
+        if ([observedKeyPaths containsObject:keyPath] && [vc isEqual:[self.carouselViewControllers objectAtIndex:self.indexOfCurrentCenterCarouselViewController]]) {
+            NSUInteger indexOfChange = [observedKeyPaths indexOfObject:keyPath];
+            switch (indexOfChange) {
+                case 0:
+                    self.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem;
+                    break;
+                case 1:
+                    self.navigationItem.leftBarButtonItems = vc.navigationItem.leftBarButtonItems;
+                    break;
+                case 2:
+                    self.navigationItem.rightBarButtonItem = vc.navigationItem.rightBarButtonItem;
+                    break;
+                case 3:
+                    self.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems;
+                    break;
+                case 4:
+                    self.navigationItem.title = vc.navigationItem.title;
+                    break;
+                case 5:
+                    self.navigationItem.titleView = vc.navigationItem.titleView;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }
 
 #pragma mark - Methods
@@ -387,10 +426,15 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 - (void)setCarouselViewControllers:(NSArray *)carouselViewControllers
 {
     _carouselViewControllers = carouselViewControllers;
+    [_carouselViewControllers enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        UIViewController *vc = (UIViewController *)obj;
+        [self teardownNavigationItemObservationForViewController:vc];
+    }];
     
     NSMutableArray *carouselTitles = [NSMutableArray arrayWithCapacity:self.carouselViewControllers.count];
     [self.carouselViewControllers enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIViewController *vc = (UIViewController *)obj;
+        [self setupNavigationItemObservationForViewController:vc];
         [carouselTitles addObject:(vc.title.length > 0 ? vc.title : @"")];
     }];
     self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
@@ -407,6 +451,26 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     if ([self isViewLoaded] && self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:indexToLoad]) {
         [self setupInitialViewController:[self carouselViewControllerAtIndex:indexToLoad]];
     }
+}
+
+- (void)setupNavigationItemObservationForViewController:(UIViewController *)aViewController
+{
+    [aViewController.navigationItem addObserver:self forKeyPath:@"leftBarButtonItem" options:NSKeyValueObservingOptionNew context:nil];
+    [aViewController.navigationItem addObserver:self forKeyPath:@"leftBarButtonItems" options:NSKeyValueObservingOptionNew context:nil];
+    [aViewController.navigationItem addObserver:self forKeyPath:@"rightBarButtonItem" options:NSKeyValueObservingOptionNew context:nil];
+    [aViewController.navigationItem addObserver:self forKeyPath:@"rightBarButtonItems" options:NSKeyValueObservingOptionNew context:nil];
+    [aViewController.navigationItem addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew context:nil];
+    [aViewController.navigationItem addObserver:self forKeyPath:@"titleView" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)teardownNavigationItemObservationForViewController:(UIViewController *)aViewController
+{
+    [aViewController.navigationItem removeObserver:self forKeyPath:@"leftBarButtonItem"];
+    [aViewController.navigationItem removeObserver:self forKeyPath:@"leftBarButtonItems"];
+    [aViewController.navigationItem removeObserver:self forKeyPath:@"rightBarButtonItem"];
+    [aViewController.navigationItem removeObserver:self forKeyPath:@"rightBarButtonItems"];
+    [aViewController.navigationItem removeObserver:self forKeyPath:@"title"];
+    [aViewController.navigationItem removeObserver:self forKeyPath:@"titleView"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -431,6 +495,14 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 {
     [super viewDidDisappear:animated];
     [self.centerCarouselViewController endAppearanceTransition];
+}
+
+- (void)dealloc
+{
+    [self.carouselViewControllers enumerateObjectsWithOptions:0 usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        UIViewController *vc = (UIViewController *)obj;
+        [self teardownNavigationItemObservationForViewController:vc];
+    }];
 }
 
 @end
