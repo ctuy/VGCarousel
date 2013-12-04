@@ -38,12 +38,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 @property (nonatomic) NSUInteger indexOfCurrentCenterCarouselViewController;
 
-@property (nonatomic) BOOL leftCarouselViewControllerTriggeredDidMove;
-@property (nonatomic) BOOL rightCarouselViewControllerTriggeredDidMove;
-
-@property (nonatomic) BOOL shouldHideOppositeViewController;
-@property (nonatomic) BOOL hidingOppositeViewController;
-
 @property (nonatomic) ScrollDirection lastScrollDirection;
 
 @end
@@ -238,7 +232,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
             self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
             self.lastScrollDirection = ScrollDirectionNone;
-            self.hidingOppositeViewController = NO;
         }
             break;
         case UIGestureRecognizerStateChanged:
@@ -248,83 +241,71 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             self.carouselTitleView.shiftPercentage = change;
             
             ScrollDirection currentDirection = [self scrollDirectionForTranslation:translation.x];
-            // if current is right and previous is not right, hide left
             BOOL shouldHideOppositeViewController = (currentDirection != self.lastScrollDirection && currentDirection != ScrollDirectionNone);
             self.lastScrollDirection = currentDirection;
             
             if (translation.x > 0) {
-                if (!self.leftCarouselViewController) {
+                if (self.carouselViewControllers.count > 2 && !self.leftCarouselViewController) {
                     self.leftCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
-                    [self addChildViewController:self.leftCarouselViewController];
                     self.leftCarouselViewController.view.userInteractionEnabled = NO;
                     [self.carouselContentView addSubview:self.leftCarouselViewController.view];
                     [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
-                    self.leftCarouselViewControllerTriggeredDidMove = NO;
-                    [self.leftCarouselViewController beginAppearanceTransition:YES animated:YES];
                 }
-                if (
-                    shouldHideOppositeViewController && !self.hidingOppositeViewController && self.rightCarouselViewController) {
-                    [self.rightCarouselViewController willMoveToParentViewController:nil];
-                    [self.rightCarouselViewController beginAppearanceTransition:NO animated:YES];
+                else if (!self.leftCarouselViewController) {
+                    if (self.rightCarouselViewController) {
+                        self.leftCarouselViewController = self.rightCarouselViewController;
+                    }
+                    else {
+                        self.leftCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
+                        self.leftCarouselViewController.view.userInteractionEnabled = NO;
+                        [self.carouselContentView addSubview:self.leftCarouselViewController.view];
+                        [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
+                    }
                 }
+                if (shouldHideOppositeViewController && self.carouselViewControllers.count == 2) {
+                    self.leftCarouselViewController.view.center = self.leftCarouselInitialCenter;
+                    self.rightCarouselViewController = nil;
+                }
+
+                
                 [UIView animateWithDuration:0.25f animations:^{
                     self.leftCarouselViewController.view.center = CGPointMake(self.leftCarouselInitialCenter.x + translation.x, self.leftCarouselInitialCenter.y);
                     self.centerCarouselViewController.view.center = CGPointMake(self.centerCarouselInitialCenter.x + translation.x, self.centerCarouselInitialCenter.y);
-                    if (shouldHideOppositeViewController && !self.hidingOppositeViewController && self.rightCarouselViewController) {
-                        self.rightCarouselViewController.view.center = self.rightCarouselInitialCenter;
-                    }
+                    self.rightCarouselViewController.view.center = CGPointMake(self.rightCarouselInitialCenter.x + translation.x, self.rightCarouselInitialCenter.y);
+
                     [self.carouselTitleView layoutBasedOnPercentage];
-                } completion:^(BOOL finished) {
-                    if (!self.leftCarouselViewControllerTriggeredDidMove) {
-                        self.leftCarouselViewControllerTriggeredDidMove = YES;
-                        [self.leftCarouselViewController endAppearanceTransition];
-                        [self.leftCarouselViewController didMoveToParentViewController:self];
-                    }
-                    if (self.hidingOppositeViewController && self.rightCarouselViewController) {
-                        [self.rightCarouselViewController.view removeFromSuperview];
-                        [self.rightCarouselViewController endAppearanceTransition];
-                        [self.rightCarouselViewController removeFromParentViewController];
-                        self.rightCarouselViewController = nil;
-                        self.hidingOppositeViewController = NO;
-                    }
-                }];
+                } completion:nil];
             }
             else if (translation.x < 0) {
-                if (!self.rightCarouselViewController) {
+                if (self.carouselViewControllers.count > 2 && !self.rightCarouselViewController) {
                     self.rightCarouselViewController = [self rightCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
-                    [self addChildViewController:self.rightCarouselViewController];
                     self.rightCarouselViewController.view.userInteractionEnabled = NO;
                     [self.carouselContentView addSubview:self.rightCarouselViewController.view];
                     [self.carouselContentView sendSubviewToBack:self.rightCarouselViewController.view];
-                    self.rightCarouselViewControllerTriggeredDidMove = NO;
-                    [self.rightCarouselViewController beginAppearanceTransition:YES animated:YES];
                 }
-                if (shouldHideOppositeViewController && !self.hidingOppositeViewController && self.leftCarouselViewController) {
-                    [self.leftCarouselViewController willMoveToParentViewController:nil];
-                    [self.leftCarouselViewController beginAppearanceTransition:NO animated:YES];
+                else if (!self.rightCarouselViewController) {
+                    if (self.leftCarouselViewController) {
+                        self.rightCarouselViewController = self.leftCarouselViewController;
+                    }
+                    else {
+                        self.rightCarouselViewController = [self rightCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
+                        self.rightCarouselViewController.view.userInteractionEnabled = NO;
+                        [self.carouselContentView addSubview:self.rightCarouselViewController.view];
+                        [self.carouselContentView sendSubviewToBack:self.rightCarouselViewController.view];
+                    }
                 }
+                if (shouldHideOppositeViewController && self.carouselViewControllers.count == 2) {
+                    self.rightCarouselViewController.view.center = self.rightCarouselInitialCenter;
+                    self.leftCarouselViewController = nil;
+                }
+
                 [UIView animateWithDuration:0.25f animations:^{
                     self.rightCarouselViewController.view.center = CGPointMake(self.rightCarouselInitialCenter.x + translation.x, self.rightCarouselInitialCenter.y);
                     self.centerCarouselViewController.view.center = CGPointMake(self.centerCarouselInitialCenter.x + translation.x, self.centerCarouselInitialCenter.y);
-                    if (shouldHideOppositeViewController && !self.hidingOppositeViewController && self.leftCarouselViewController) {
-                        self.hidingOppositeViewController = YES;
-                        self.leftCarouselViewController.view.center = self.leftCarouselInitialCenter;
-                    }
+                    self.leftCarouselViewController.view.center = CGPointMake(self.leftCarouselInitialCenter.x + translation.x, self.leftCarouselInitialCenter.y);
+
                     [self.carouselTitleView layoutBasedOnPercentage];
-                } completion:^(BOOL finished) {
-                    if (!self.rightCarouselViewControllerTriggeredDidMove) {
-                        self.rightCarouselViewControllerTriggeredDidMove = YES;
-                        [self.rightCarouselViewController endAppearanceTransition];
-                        [self.rightCarouselViewController didMoveToParentViewController:self];
-                    }
-                    if (self.hidingOppositeViewController && self.leftCarouselViewController) {
-                        [self.leftCarouselViewController.view removeFromSuperview];
-                        [self.leftCarouselViewController endAppearanceTransition];
-                        [self.leftCarouselViewController removeFromParentViewController];
-                        self.leftCarouselViewController = nil;
-                        self.hidingOppositeViewController = NO;
-                    }
-                }];
+                } completion:nil];
             }
         }
             break;
@@ -335,14 +316,23 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     self.carouselTitleView.shiftPercentage = 1.0f;
                     [self.centerCarouselViewController willMoveToParentViewController:nil];
                     [self.centerCarouselViewController beginAppearanceTransition:NO animated:YES];
+                    [self addChildViewController:self.leftCarouselViewController];
+                    [self.leftCarouselViewController beginAppearanceTransition:YES animated:YES];
+
                     [UIView animateWithDuration:0.3f animations:^{
                         self.centerCarouselViewController.view.center = self.rightCarouselInitialCenter;
                         self.leftCarouselViewController.view.center = self.centerCarouselInitialCenter;
+                        // TODO: where to animate right (offscreen already)
                         [self.carouselTitleView layoutBasedOnPercentage];
                     } completion:^(BOOL finished) {
                         [self.centerCarouselViewController.view removeFromSuperview];
                         [self.centerCarouselViewController endAppearanceTransition];
                         [self.centerCarouselViewController removeFromParentViewController];
+                        
+                        [self.leftCarouselViewController endAppearanceTransition];
+                        [self.leftCarouselViewController didMoveToParentViewController:self];
+
+                        self.rightCarouselViewController = nil;
                         
                         self.centerCarouselViewController = self.leftCarouselViewController;
                         self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:self.centerCarouselViewController];
@@ -358,14 +348,24 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     self.carouselTitleView.shiftPercentage = -1.0f;
                     [self.centerCarouselViewController willMoveToParentViewController:nil];
                     [self.centerCarouselViewController beginAppearanceTransition:NO animated:YES];
+                    
+                    [self addChildViewController:self.rightCarouselViewController];
+                    [self.rightCarouselViewController beginAppearanceTransition:YES animated:YES];
+                    
                     [UIView animateWithDuration:0.3f animations:^{
                         self.centerCarouselViewController.view.center = self.leftCarouselInitialCenter;
                         self.rightCarouselViewController.view.center = self.centerCarouselInitialCenter;
+                        // TODO: where to animate left (offscreen already)
                         [self.carouselTitleView layoutBasedOnPercentage];
                     } completion:^(BOOL finished) {
                         [self.centerCarouselViewController.view removeFromSuperview];
                         [self.centerCarouselViewController endAppearanceTransition];
                         [self.centerCarouselViewController removeFromParentViewController];
+                        
+                        [self.rightCarouselViewController endAppearanceTransition];
+                        [self.rightCarouselViewController didMoveToParentViewController:self];
+                        
+                        self.leftCarouselViewController = nil;
 
                         self.centerCarouselViewController = self.rightCarouselViewController;
                         self.indexOfCurrentCenterCarouselViewController = [self.carouselViewControllers indexOfObject:self.centerCarouselViewController];
@@ -380,14 +380,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             }
             else {
                 self.carouselTitleView.shiftPercentage = 0.0f;
-                if (self.leftCarouselViewController) {
-                    [self.leftCarouselViewController willMoveToParentViewController:nil];
-                    [self.leftCarouselViewController beginAppearanceTransition:NO animated:YES];
-                }
-                if (self.rightCarouselViewController) {
-                    [self.rightCarouselViewController willMoveToParentViewController:nil];
-                    [self.rightCarouselViewController beginAppearanceTransition:NO animated:YES];
-                }
                 [UIView animateWithDuration:0.3f animations:^{
                     self.centerCarouselViewController.view.center = self.centerCarouselInitialCenter;
                     if (self.leftCarouselViewController) {
@@ -401,14 +393,10 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     self.centerCarouselViewController.view.userInteractionEnabled = YES;
                     if (self.leftCarouselViewController) {
                         [self.leftCarouselViewController.view removeFromSuperview];
-                        [self.leftCarouselViewController endAppearanceTransition];
-                        [self.leftCarouselViewController removeFromParentViewController];
                         self.leftCarouselViewController = nil;
                     }
                     if (self.rightCarouselViewController) {
                         [self.rightCarouselViewController.view removeFromSuperview];
-                        [self.rightCarouselViewController endAppearanceTransition];
-                        [self.rightCarouselViewController removeFromParentViewController];
                         self.rightCarouselViewController = nil;
                     }
                 }];
@@ -442,9 +430,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     self.carouselTitles = [NSArray arrayWithArray:carouselTitles];
     
     self.carouselTitleView.carouselTitles = self.carouselTitles;
-    
-    self.leftCarouselViewControllerTriggeredDidMove = NO;
-    self.rightCarouselViewControllerTriggeredDidMove = NO;
     
     NSUInteger indexToLoad = self.indexOfCurrentCenterCarouselViewController > (carouselViewControllers.count - 1) ? carouselViewControllers.count - 1 : self.indexOfCurrentCenterCarouselViewController;
     
