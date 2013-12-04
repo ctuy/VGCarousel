@@ -61,6 +61,7 @@
         self.navigationController.navigationBar.tintColor = [UIColor greenColor];
     }
     else {
+        self.navigationItem.title = self.title;
         self.navigationController.navigationBar.tintColor = [UIColor blueColor];
     }
 }
