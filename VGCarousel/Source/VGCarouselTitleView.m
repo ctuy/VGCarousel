@@ -10,8 +10,8 @@
 #import "VGIndexUtilities.h"
 
 #define DEFAULT_CAROUSEL_TITLE_BAR_HEIGHT 26
-#define DEFAULT_CAROUSEL_TITLE_BAR_COLOR [UIColor colorWithRed:0.0/255.0 green:96.0/255.0 blue:119.0/255.0 alpha:1.0]
-#define DEFAULT_CAROUSEL_TITLE_FONT [UIFont fontWithName:@"Helvetica-Bold" size:16.0f]
+#define DEFAULT_CAROUSEL_TITLE_BAR_COLOR [UIColor colorWithRed:0.0/255.0 green:97.0/255.0 blue:117.0/255.0 alpha:1.0]
+#define DEFAULT_CAROUSEL_TITLE_FONT [UIFont fontWithName:@"Helvetica-Bold" size:14.0f]
 #define DEFAULT_CAROUSEL_CURRENT_TITLE_COLOR [UIColor whiteColor]
 #define DEFAULT_CAROUSEL_INACTIVE_TITLE_COLOR [UIColor lightGrayColor]
 
