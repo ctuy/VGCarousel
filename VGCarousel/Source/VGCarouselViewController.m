@@ -40,6 +40,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 @property (nonatomic) ScrollDirection lastScrollDirection;
 
+@property (nonatomic, strong) VGLimitedPanGestureRecognizer *panGestureRecognizer;
+
 @end
 
 @implementation VGCarouselViewController
@@ -92,9 +94,9 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     [self.carouselTitleView sizeToFit];
     
     if (self.carouselViewControllers.count > 1) {
-        VGLimitedPanGestureRecognizer *panGestureRecognizer = [[VGLimitedPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-        panGestureRecognizer.percentageTranslationThreshold = self.percentageTranslationThreshold;
-        [self.view addGestureRecognizer:panGestureRecognizer];
+        self.panGestureRecognizer = [[VGLimitedPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        self.panGestureRecognizer.percentageTranslationThreshold = self.percentageTranslationThreshold;
+        [self.view addGestureRecognizer:self.panGestureRecognizer];
     }
     
     self.carouselContentView = [[UIView alloc] initWithFrame:CGRectMake(0, self.carouselTitleView.bounds.size.height, viewFrame.size.width, viewFrame.size.height - self.carouselTitleView.bounds.size.height)];
@@ -440,6 +442,16 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     
     if ([self isViewLoaded] && self.centerCarouselViewController != [self.carouselViewControllers objectAtIndex:indexToLoad]) {
         [self setupInitialViewController:[self carouselViewControllerAtIndex:indexToLoad]];
+    }
+    
+    if (self.carouselViewControllers.count > 1 && !self.panGestureRecognizer) {
+        self.panGestureRecognizer = [[VGLimitedPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+        self.panGestureRecognizer.percentageTranslationThreshold = self.percentageTranslationThreshold;
+        [self.view addGestureRecognizer:self.panGestureRecognizer];
+    }
+    else if (self.carouselViewControllers.count == 1 && self.panGestureRecognizer) {
+        [self.view removeGestureRecognizer:self.panGestureRecognizer];
+        self.panGestureRecognizer = nil;
     }
 }
 
