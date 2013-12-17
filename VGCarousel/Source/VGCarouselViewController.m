@@ -492,6 +492,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
         [self.centerCarouselViewController beginAppearanceTransition:YES animated:NO];
     }
     [self.centerCarouselViewController endAppearanceTransition];
+    
+    self.centerCarouselVCAtViewWillAppear = nil;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
