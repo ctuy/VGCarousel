@@ -42,6 +42,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 @property (nonatomic, strong) VGLimitedPanGestureRecognizer *panGestureRecognizer;
 
+@property (nonatomic, strong) UIViewController *centerCarouselVCAtViewWillAppear;
+
 @end
 
 @implementation VGCarouselViewController
@@ -162,19 +164,19 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 - (void)setupInitialViewController:(UIViewController *)vc
 {
     if (self.centerCarouselViewController) {
-        if ([self isVisible]) {
+        if ([self.centerCarouselViewController isVisible]) {
             [self.centerCarouselViewController beginAppearanceTransition:NO animated:NO];
         }
         [self.centerCarouselViewController willMoveToParentViewController:nil];
         [self.centerCarouselViewController.view removeFromSuperview];
-        if ([self isVisible]) {
+        if ([self.centerCarouselViewController isVisible]) {
             [self.centerCarouselViewController endAppearanceTransition];
         }
         [self.centerCarouselViewController removeFromParentViewController];
     }
     [self addChildViewController:vc];
     [self.carouselContentView addSubview:vc.view];
-    if ([self isVisible]) {
+    if ([self.centerCarouselViewController isVisible]) {
         [vc beginAppearanceTransition:YES animated:NO];
         [vc endAppearanceTransition];
     }
@@ -478,12 +480,17 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.centerCarouselVCAtViewWillAppear = self.centerCarouselVCAtViewWillAppear;
     [self.centerCarouselViewController beginAppearanceTransition:YES animated:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    if (self.centerCarouselVCAtViewWillAppear != self.centerCarouselViewController) {
+        [self.centerCarouselVCAtViewWillAppear endAppearanceTransition];
+        [self.centerCarouselViewController beginAppearanceTransition:YES animated:NO];
+    }
     [self.centerCarouselViewController endAppearanceTransition];
 }
 
