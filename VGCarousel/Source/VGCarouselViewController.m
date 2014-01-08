@@ -42,8 +42,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 @property (nonatomic, strong) VGLimitedPanGestureRecognizer *panGestureRecognizer;
 
-@property (nonatomic) BOOL isTranstioningVC;
-
 @end
 
 @implementation VGCarouselViewController
@@ -226,9 +224,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 
 - (void)handlePanGesture:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.isTranstioningVC) {
-        return;
-    }
     UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *)gestureRecognizer;
     CGPoint translation = [panGestureRecognizer translationInView:self.view];
     switch (panGestureRecognizer.state) {
@@ -330,7 +325,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     [self addChildViewController:self.centerCarouselViewController];
                     [self.centerCarouselViewController beginAppearanceTransition:YES animated:YES];
                     
-                    self.isTranstioningVC = YES;
+                    self.panGestureRecognizer.enabled = NO;
                     [UIView animateWithDuration:0.3f animations:^{
                         oldCenterViewController.view.center = self.rightCarouselInitialCenter;
                         self.centerCarouselViewController.view.center = self.centerCarouselInitialCenter;
@@ -352,7 +347,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         if ([self.delegate respondsToSelector:@selector(carouselViewController:didChangeToIndex:)]) {
                             [self.delegate carouselViewController:self didChangeToIndex:self.indexOfCurrentCenterCarouselViewController];
                         }
-                        self.isTranstioningVC = NO;
+                        self.panGestureRecognizer.enabled = YES;
                     }];
                 }
                 else if (translation.x < 0) {
@@ -365,7 +360,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     [oldCenterViewController beginAppearanceTransition:NO animated:YES];
                     [self addChildViewController:self.centerCarouselViewController];
                     [self.centerCarouselViewController beginAppearanceTransition:YES animated:YES];
-                    self.isTranstioningVC = YES;
+                    
+                    self.panGestureRecognizer.enabled = NO;
                     [UIView animateWithDuration:0.3f animations:^{
                         oldCenterViewController.view.center = self.leftCarouselInitialCenter;
                         self.centerCarouselViewController.view.center = self.centerCarouselInitialCenter;
@@ -387,7 +383,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         if ([self.delegate respondsToSelector:@selector(carouselViewController:didChangeToIndex:)]) {
                             [self.delegate carouselViewController:self didChangeToIndex:self.indexOfCurrentCenterCarouselViewController];
                         }
-                        self.isTranstioningVC = NO;
+                        self.panGestureRecognizer.enabled = YES;
                     }];
                 }
             }
