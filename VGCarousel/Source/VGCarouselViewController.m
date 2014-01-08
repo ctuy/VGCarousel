@@ -315,6 +315,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
         {
             if (fabs(translation.x) > self.carouselContentView.bounds.size.width * self.percentageTranslationThreshold) {
                 if (translation.x > 0) {
+                    self.panGestureRecognizer.enabled = NO;
                     self.carouselTitleView.shiftPercentage = 1.0f;
                     
                     UIViewController *oldCenterViewController = self.centerCarouselViewController;
@@ -325,7 +326,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     [self addChildViewController:self.centerCarouselViewController];
                     [self.centerCarouselViewController beginAppearanceTransition:YES animated:YES];
                     
-                    self.panGestureRecognizer.enabled = NO;
                     [UIView animateWithDuration:0.3f animations:^{
                         oldCenterViewController.view.center = self.rightCarouselInitialCenter;
                         self.centerCarouselViewController.view.center = self.centerCarouselInitialCenter;
@@ -351,6 +351,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     }];
                 }
                 else if (translation.x < 0) {
+                    self.panGestureRecognizer.enabled = NO;
                     self.carouselTitleView.shiftPercentage = -1.0f;
                     
                     UIViewController *oldCenterViewController = self.centerCarouselViewController;
@@ -361,7 +362,6 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     [self addChildViewController:self.centerCarouselViewController];
                     [self.centerCarouselViewController beginAppearanceTransition:YES animated:YES];
                     
-                    self.panGestureRecognizer.enabled = NO;
                     [UIView animateWithDuration:0.3f animations:^{
                         oldCenterViewController.view.center = self.leftCarouselInitialCenter;
                         self.centerCarouselViewController.view.center = self.centerCarouselInitialCenter;
