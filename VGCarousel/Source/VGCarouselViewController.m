@@ -193,11 +193,25 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     return vc;
 }
 
+- (UIViewController *)alignedLeftCarouselViewControllerOfViewControllerAtIndex:(NSUInteger)index
+{
+    UIViewController *vc = [self leftCarouselViewControllerOfViewControllerAtIndex:index];
+    vc.view.center = self.leftCarouselInitialCenter;;
+    return vc;
+}
+
 - (UIViewController *)leftCarouselViewControllerOfViewControllerAtIndex:(NSUInteger)index
 {
     NSUInteger leftIndex = [VGIndexUtilities previousIndexOfIndex:index numberOfItems:self.carouselViewControllers.count];
     UIViewController *vc = [self carouselViewControllerAtIndex:leftIndex];
-    vc.view.center = self.leftCarouselInitialCenter;;
+    return vc;
+}
+
+
+- (UIViewController *)alignedRightCarouselViewControllerOfViewControllerAtIndex:(NSUInteger)index
+{
+    UIViewController *vc = [self rightCarouselViewControllerOfViewControllerAtIndex:index];
+    vc.view.center = self.rightCarouselInitialCenter;
     return vc;
 }
 
@@ -205,9 +219,9 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
 {
     NSUInteger rightIndex = [VGIndexUtilities nextIndexOfIndex:index numberOfItems:self.carouselViewControllers.count];
     UIViewController *vc = [self carouselViewControllerAtIndex:rightIndex];
-    vc.view.center = self.rightCarouselInitialCenter;
     return vc;
 }
+
 
 - (ScrollDirection)scrollDirectionForTranslation:(CGFloat)translation
 {
@@ -248,7 +262,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             
             if (translation.x > 0) {
                 if (self.carouselViewControllers.count > 2 && !self.leftCarouselViewController) {
-                    self.leftCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
+                    self.leftCarouselViewController = [self alignedLeftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
                     self.leftCarouselViewController.view.userInteractionEnabled = NO;
                     [self.carouselContentView addSubview:self.leftCarouselViewController.view];
                     [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
@@ -258,7 +272,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         self.leftCarouselViewController = self.rightCarouselViewController;
                     }
                     else {
-                        self.leftCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
+                        self.leftCarouselViewController = [self alignedLeftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
                         self.leftCarouselViewController.view.userInteractionEnabled = NO;
                         [self.carouselContentView addSubview:self.leftCarouselViewController.view];
                         [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
@@ -280,7 +294,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             }
             else if (translation.x < 0) {
                 if (self.carouselViewControllers.count > 2 && !self.rightCarouselViewController) {
-                    self.rightCarouselViewController = [self rightCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
+                    self.rightCarouselViewController = [self alignedRightCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
                     self.rightCarouselViewController.view.userInteractionEnabled = NO;
                     [self.carouselContentView addSubview:self.rightCarouselViewController.view];
                     [self.carouselContentView sendSubviewToBack:self.rightCarouselViewController.view];
@@ -290,7 +304,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         self.rightCarouselViewController = self.leftCarouselViewController;
                     }
                     else {
-                        self.rightCarouselViewController = [self rightCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
+                        self.rightCarouselViewController = [self alignedRightCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
                         self.rightCarouselViewController.view.userInteractionEnabled = NO;
                         [self.carouselContentView addSubview:self.rightCarouselViewController.view];
                         [self.carouselContentView sendSubviewToBack:self.rightCarouselViewController.view];
@@ -319,7 +333,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     self.carouselTitleView.shiftPercentage = 1.0f;
                     
                     UIViewController *oldCenterViewController = self.centerCarouselViewController;
-                    self.centerCarouselViewController = self.leftCarouselViewController;
+                    self.centerCarouselViewController = [self leftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
                     
                     [oldCenterViewController willMoveToParentViewController:nil];
                     [oldCenterViewController beginAppearanceTransition:NO animated:YES];
@@ -355,7 +369,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                     self.carouselTitleView.shiftPercentage = -1.0f;
                     
                     UIViewController *oldCenterViewController = self.centerCarouselViewController;
-                    self.centerCarouselViewController = self.rightCarouselViewController;
+                    self.centerCarouselViewController = [self rightCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
 
                     [oldCenterViewController willMoveToParentViewController:nil];
                     [oldCenterViewController beginAppearanceTransition:NO animated:YES];
@@ -389,6 +403,8 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             }
             else {
                 self.carouselTitleView.shiftPercentage = 0.0f;
+                self.panGestureRecognizer.enabled = NO;
+
                 [UIView animateWithDuration:0.3f animations:^{
                     self.centerCarouselViewController.view.center = self.centerCarouselInitialCenter;
                     if (self.leftCarouselViewController) {
@@ -408,6 +424,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
                         [self.rightCarouselViewController.view removeFromSuperview];
                         self.rightCarouselViewController = nil;
                     }
+                    self.panGestureRecognizer.enabled = YES;
                 }];
             }
         }
