@@ -42,7 +42,7 @@
     controllerC.title = NSLocalizedString(@"VC3", @"");
     controllerC.loadBackgroundColor = [UIColor orangeColor];
     controllerC.delegate = self;
-    [viewControllers addObject:controllerC];
+    //[viewControllers addObject:controllerC];
     
     VGTestViewController *controllerD = [[VGTestViewController alloc] initWithNibName:nil bundle:nil];
     controllerD.title = NSLocalizedString(@"VC4", @"");
