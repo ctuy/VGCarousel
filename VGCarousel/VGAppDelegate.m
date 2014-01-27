@@ -48,7 +48,7 @@
     controllerD.title = NSLocalizedString(@"VC4", @"");
     controllerD.loadBackgroundColor = [UIColor purpleColor];
     controllerD.delegate = self;
-//    [viewControllers addObject:controllerD];
+    [viewControllers addObject:controllerD];
     
     self.contentVCs = [NSArray arrayWithArray:viewControllers];
 
