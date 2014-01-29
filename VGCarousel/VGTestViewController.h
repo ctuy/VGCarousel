@@ -14,6 +14,7 @@
 
 - (void)testViewControllerTappedPlus:(VGTestViewController *)testViewController;
 - (void)testViewControllerTappedMinus:(VGTestViewController *)testViewController;
+- (void)testViewControllerTappedShift:(VGTestViewController *)testViewController;
 
 @end
 

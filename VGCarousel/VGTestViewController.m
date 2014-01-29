@@ -37,16 +37,23 @@
     UIButton *plusButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [plusButton setTitle:@"+" forState:UIControlStateNormal];
     [plusButton sizeToFit];
-    plusButton.center = CGPointMake(CGRectGetWidth(self.view.bounds) / 4, CGRectGetMidY(self.view.bounds));
+    plusButton.center = CGPointMake(CGRectGetWidth(self.view.bounds) / 5, CGRectGetMidY(self.view.bounds));
     [plusButton addTarget:self action:@selector(tappedPlus:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:plusButton];
     
     UIButton *minusButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [minusButton setTitle:@"-" forState:UIControlStateNormal];
     [minusButton sizeToFit];
-    minusButton.center = CGPointMake(CGRectGetWidth(self.view.bounds) * 3 / 4, CGRectGetMidY(self.view.bounds));
+    minusButton.center = CGPointMake(CGRectGetWidth(self.view.bounds) * 2 / 4, CGRectGetMidY(self.view.bounds));
     [minusButton addTarget:self action:@selector(tappedMinus:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:minusButton];
+    
+    UIButton *shiftButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [shiftButton setTitle:@"->" forState:UIControlStateNormal];
+    [shiftButton sizeToFit];
+    shiftButton.center = CGPointMake(CGRectGetWidth(self.view.bounds) * 3 / 4, CGRectGetMidY(self.view.bounds));
+    [shiftButton addTarget:self action:@selector(tappedShift:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:shiftButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -139,6 +146,13 @@
 {
     if ([self.delegate respondsToSelector:@selector(testViewControllerTappedMinus:)]) {
         [self.delegate testViewControllerTappedMinus:self];
+    }
+}
+
+- (void)tappedShift:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(testViewControllerTappedShift:)]) {
+        [self.delegate testViewControllerTappedShift:self];
     }
 }
 
