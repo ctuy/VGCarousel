@@ -28,5 +28,6 @@
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
 - (id)initWithRootViewController:(UIViewController *)viewController;
+- (void)scrollToViewController:(UIViewController *)vc;
 
 @end
