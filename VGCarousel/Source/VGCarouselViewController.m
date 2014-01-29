@@ -243,10 +243,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     switch (panGestureRecognizer.state) {
         case UIGestureRecognizerStateBegan:
         {
-            self.centerCarouselViewController.view.userInteractionEnabled = NO;
-            self.centerCarouselInitialCenter = CGPointMake(CGRectGetMidX(self.carouselContentView.bounds), CGRectGetMidY(self.carouselContentView.bounds));
-            self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
-            self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
+            [self initializeForScrolling];
             self.lastScrollDirection = ScrollDirectionNone;
         }
             break;
@@ -261,23 +258,7 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
             self.lastScrollDirection = currentDirection;
             
             if (translation.x > 0) {
-                if (self.carouselViewControllers.count > 2 && !self.leftCarouselViewController) {
-                    self.leftCarouselViewController = [self alignedLeftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
-                    self.leftCarouselViewController.view.userInteractionEnabled = NO;
-                    [self.carouselContentView addSubview:self.leftCarouselViewController.view];
-                    [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
-                }
-                else if (!self.leftCarouselViewController) {
-                    if (self.rightCarouselViewController) {
-                        self.leftCarouselViewController = self.rightCarouselViewController;
-                    }
-                    else {
-                        self.leftCarouselViewController = [self alignedLeftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
-                        self.leftCarouselViewController.view.userInteractionEnabled = NO;
-                        [self.carouselContentView addSubview:self.leftCarouselViewController.view];
-                        [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
-                    }
-                }
+                [self setupLeftCarouselViewController];
                 if (shouldHideOppositeViewController && self.carouselViewControllers.count == 2) {
                     self.leftCarouselViewController.view.center = self.leftCarouselInitialCenter;
                     self.rightCarouselViewController = nil;
@@ -439,30 +420,40 @@ typedef NS_ENUM(NSUInteger, ScrollDirection) {
     return NO;
 }
 
-- (void)scrollToViewController:(UIViewController *)vc
+- (void)initializeForScrolling
 {
-    if ([self.carouselViewControllers indexOfObject:vc] != [self.carouselViewControllers indexOfObject:self.centerCarouselViewController]) {
-        self.centerCarouselViewController.view.userInteractionEnabled = NO;
-        self.centerCarouselInitialCenter = CGPointMake(CGRectGetMidX(self.carouselContentView.bounds), CGRectGetMidY(self.carouselContentView.bounds));
-        self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
-        self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
-        if (self.carouselViewControllers.count > 2 && !self.leftCarouselViewController) {
+    self.centerCarouselViewController.view.userInteractionEnabled = NO;
+    self.centerCarouselInitialCenter = CGPointMake(CGRectGetMidX(self.carouselContentView.bounds), CGRectGetMidY(self.carouselContentView.bounds));
+    self.leftCarouselInitialCenter = CGPointMake(-self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
+    self.rightCarouselInitialCenter = CGPointMake(self.carouselContentView.bounds.size.width + self.carouselContentView.bounds.size.width / 2, self.centerCarouselInitialCenter.y);
+}
+
+- (void)setupLeftCarouselViewController
+{
+    if (self.carouselViewControllers.count > 2 && !self.leftCarouselViewController) {
+        self.leftCarouselViewController = [self alignedLeftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
+        self.leftCarouselViewController.view.userInteractionEnabled = NO;
+        [self.carouselContentView addSubview:self.leftCarouselViewController.view];
+        [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
+    }
+    else if (!self.leftCarouselViewController) {
+        if (self.rightCarouselViewController) {
+            self.leftCarouselViewController = self.rightCarouselViewController;
+        }
+        else {
             self.leftCarouselViewController = [self alignedLeftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
             self.leftCarouselViewController.view.userInteractionEnabled = NO;
             [self.carouselContentView addSubview:self.leftCarouselViewController.view];
             [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
         }
-        else if (!self.leftCarouselViewController) {
-            if (self.rightCarouselViewController) {
-                self.leftCarouselViewController = self.rightCarouselViewController;
-            }
-            else {
-                self.leftCarouselViewController = [self alignedLeftCarouselViewControllerOfViewControllerAtIndex:self.indexOfCurrentCenterCarouselViewController];
-                self.leftCarouselViewController.view.userInteractionEnabled = NO;
-                [self.carouselContentView addSubview:self.leftCarouselViewController.view];
-                [self.carouselContentView sendSubviewToBack:self.leftCarouselViewController.view];
-            }
-        }
+    }
+}
+
+- (void)scrollToViewController:(UIViewController *)vc
+{
+    if ([self.carouselViewControllers indexOfObject:vc] != [self.carouselViewControllers indexOfObject:self.centerCarouselViewController]) {
+        [self initializeForScrolling];
+        [self setupLeftCarouselViewController];
         [self manualShiftWithSuccess:^{
             [self scrollToViewController:vc];
         }];
