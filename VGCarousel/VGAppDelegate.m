@@ -107,4 +107,11 @@
     }
 }
 
+- (void)testViewControllerTappedShift:(VGTestViewController *)testViewController
+{
+    if (self.carouselVC.carouselViewControllers.count > 1) {
+        [self.carouselVC scrollToViewController:[self.carouselVC.carouselViewControllers objectAtIndex:self.carouselVC.carouselViewControllers.count - 1]];
+    }
+}
+
 @end
